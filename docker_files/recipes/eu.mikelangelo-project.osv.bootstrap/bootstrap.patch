@@ -1,0 +1,13 @@
+diff --git a/usr.manifest.skel b/usr.manifest.skel
+index 583bdfe..6a82911 100644
+--- a/usr.manifest.skel
++++ b/usr.manifest.skel
+@@ -6,8 +6,6 @@
+ /zfs.so: zfs.so
+ /tools/mkfs.so: tools/mkfs/mkfs.so
+ /tools/cpiod.so: tools/cpiod/cpiod.so
+-/tools/mount-nfs.so: tools/mount/mount-nfs.so
+-/tools/umount.so: tools/mount/umount.so
+ /usr/lib/libgcc_s.so.1: %(gccbase)s/lib64/libgcc_s.so.1
+ /&/etc/hosts: ../../static/&
+ /etc/mnttab: ->/proc/mounts

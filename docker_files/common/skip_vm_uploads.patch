@@ -1,0 +1,106 @@
+diff --git a/scripts/build b/scripts/build
+index 7cee19c..4954784 100755
+--- a/scripts/build
++++ b/scripts/build
+@@ -149,52 +149,52 @@ fi
+ 
+ jdkbase=$jdkbase ARCH=$arch mode=$mode OSV_BASE=$SRC OSV_BUILD_PATH=$OSV_BUILD_PATH scripts/module.py $j_arg build -c $modules $usrskel_arg
+ 
+-bootfs_manifest=$manifest make "${args[@]}" | tee -a build.out
+-# check exit status of make
+-status=${PIPESTATUS[0]}
+-if [ $status -ne 0 ]
+-then
+-	echo "make failed. Exiting from build script"
+-	exit $status
+-fi
+-
+-if test ! -f build/last/loader.img
+-then
+-	echo "'make' did not leave expected results" >&2
+-	exit 2
+-fi
+-
+-loader_size=`stat --printf %s $OUT/loader.img`
+-zfs_start=$(($loader_size+2097151 & ~2097151))
+-zfs_size=$(($fs_size - $zfs_start))
+-
+-# The python scripts called below assume the current directory is $OUT (as was
+-# the case in our old build.mk).
+-cd $OUT
+-
+-case $fs_type in
+-zfs)
+-	cp loader.img bare.raw
+-	$SRC/scripts/imgedit.py setpartition "-f raw bare.raw" 2 $zfs_start $zfs_size
+-
+-	qemu-img convert -f raw -O qcow2 bare.raw usr.img
+-	qemu-img resize usr.img ${fs_size}b >/dev/null 2>&1
+-
+-	$SRC/scripts/upload_manifest.py -o usr.img -m usr.manifest -D jdkbase=$jdkbase -D gccbase=$gccbase -D glibcbase=$glibcbase -D miscbase=$miscbase
+-	;;
+-ramfs)
+-	qemu-img convert -f raw -O qcow2 loader.img usr.img
+-	;;
+-esac
+-
+-$SRC/scripts/imgedit.py setargs usr.img `cat cmdline`
+-
+-# Support "build check"
+-for i
+-do
+-	case $i in
+-	check)	set -x
+-		cd $SRC
+-		exec ./scripts/test.py
+-	esac
+-done
++#bootfs_manifest=$manifest make "${args[@]}" | tee -a build.out
++## check exit status of make
++#status=${PIPESTATUS[0]}
++#if [ $status -ne 0 ]
++#then
++#	echo "make failed. Exiting from build script"
++#	exit $status
++#fi
++#
++#if test ! -f build/last/loader.img
++#then
++#	echo "'make' did not leave expected results" >&2
++#	exit 2
++#fi
++#
++#loader_size=`stat --printf %s $OUT/loader.img`
++#zfs_start=$(($loader_size+2097151 & ~2097151))
++#zfs_size=$(($fs_size - $zfs_start))
++#
++## The python scripts called below assume the current directory is $OUT (as was
++## the case in our old build.mk).
++#cd $OUT
++#
++#case $fs_type in
++#zfs)
++#	cp loader.img bare.raw
++#	$SRC/scripts/imgedit.py setpartition "-f raw bare.raw" 2 $zfs_start $zfs_size
++#
++#	qemu-img convert -f raw -O qcow2 bare.raw usr.img
++#	qemu-img resize usr.img ${fs_size}b >/dev/null 2>&1
++#
++#	$SRC/scripts/upload_manifest.py -o usr.img -m usr.manifest -D jdkbase=$jdkbase -D gccbase=$gccbase -D glibcbase=$glibcbase -D miscbase=$miscbase
++#	;;
++#ramfs)
++#	qemu-img convert -f raw -O qcow2 loader.img usr.img
++#	;;
++#esac
++#
++#$SRC/scripts/imgedit.py setargs usr.img `cat cmdline`
++#
++## Support "build check"
++#for i
++#do
++#	case $i in
++#	check)	set -x
++#		cd $SRC
++#		exec ./scripts/test.py
++#	esac
++#done
