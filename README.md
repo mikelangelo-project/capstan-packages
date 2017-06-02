@@ -28,6 +28,24 @@ drwxrwxrwx 9 root root    4096 jun  1 13:30 eu.mikelangelo-project.osv.bootstrap
 -rwxrwxrwx 1 root root 6291456 maj 31 14:21 osv-loader.qemu
 ```
 
+## Running container
+When `mikelangelo-project/capstan-packages` container is run it builds and tests **all** recipes by
+default:
+```bash
+$ docker run -it --volume="$PWD/result:/result" mikelangelo-project/capstan-packages
+```
+You can, however, customize container behavior by setting following environment variables:
+
+| ENV | EXAMPLE VALUE | EFFECT |
+|-----|---------------|--------|
+| `RECIPES` |  eu.mikelangelo-project.osv.nfs | builds only recipes listed (comma-separated) |
+| `SKIP_TESTS` |  no | do not run tests after building (tests are run by default) |
+
+To build only `nfs` package, for example, you can use following command:
+```bash
+$ docker run -it --volume="$PWD/result:/result" --env RECIPES=eu.mikelangelo-project.osv.nfs mikelangelo-project/capstan-packages
+```
+
 ## Building container
 This section describes how to build `mikelangelo-project/capstan-packages` from scratch. Result will
 be Docker image in your local Docker repository.
