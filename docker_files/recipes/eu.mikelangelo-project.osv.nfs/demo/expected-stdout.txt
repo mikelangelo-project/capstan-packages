@@ -1,0 +1,2 @@
+Usage:
+	/tools/mount-nfs.so nfs://<server|ipv4|ipv6>/path[?arg=val[&arg=val]*] /mount_point
