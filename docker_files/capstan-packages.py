@@ -75,7 +75,7 @@ class Recipe:
         self.osv_dir = OSV_DIR
 
         # should be this recipe built using clone of osv dir (set to False for debugging to speed things up)
-        self.do_isolate_osv_dir = False
+        self.do_isolate_osv_dir = True
         # does this recipe contain demo package
         self.has_demo_package = os.path.isfile(self.demo_run_yaml)
 
@@ -160,13 +160,34 @@ def provide_loader_image():
     os.chmod(result_osv_loader_index_file, 0777)
 
 
-def list_recipes(root):
+def available_recipes(root):
     """
     list_recipes() searches for folders in given direcotry and instantiates Recipe object for each. 
     :param root: directory where recipes folders are in
+    :return: set of recipe names
+    """
+    return set([name for name in os.listdir(root) if os.path.isdir(os.path.join(root, name))])
+
+
+def select_recipes():
+    """
+    select_recipes() provides a list of Recipe instances that are to be built. By default it returns a list of
+    all available recipes, but if RECIPES environment variable is set, it applies it as filter.
     :return: list of Recipe instances
     """
-    return [Recipe(root, name) for name in os.listdir(root) if os.path.isdir(os.path.join(root, name))]
+    _print_ok('Select recipes')
+
+    all_recipe_names = available_recipes(RECIPES_DIR)
+    filter_names = os.environ.get('RECIPES')
+    if filter_names:
+        print('Filtering recipes based on RECIPES environment variable')
+        filter_names = set([name for name in filter_names.split(',')])
+
+        if not filter_names.issubset(all_recipe_names):
+            raise RuntimeError('environment variable RECIPES contains invalid recipes: %s' %
+                               list(filter_names.difference(all_recipe_names)))
+        return [Recipe(RECIPES_DIR, name) for name in filter_names]
+    return [Recipe(RECIPES_DIR, name) for name in all_recipe_names]
 
 
 def build_recipe(recipe):
@@ -265,6 +286,17 @@ def provide_mpm_for_recipe(recipe):
     os.chmod(recipe.result_yaml_file, 0777)
 
     return True
+
+
+def build_and_provide_recipe_list(recipes):
+    """
+    build_and_provide_recipe_list() first builds all recipes and then compresses them into mpm packages that
+    are located in RESULTS_DIR.
+    :param recipes: list of Recipe instances
+    """
+    for recipe in recipes:
+        if build_recipe(recipe):
+            provide_mpm_for_recipe(recipe)
 
 
 def prepare_test_capstan_root():
@@ -371,29 +403,41 @@ def test_recipe(recipe):
     return True
 
 
-if __name__ == '__main__':
-    prepare_osv_scripts()
-    clear_result_dir()
-    provide_loader_image()
+def test_recipe_list(recipes):
+    """
+    test_recipe_list() tests all recipes that have demo package in place. Make sure that recipes are
+    built and provided prior calling this function.
+    :param recipes: list of Recipe instances
+    :return: True if all tests were successfully, False otherwise
+    """
+    _print_ok('Testing recipes')
 
-    _print_ok('List recipes')
-    recipes = list_recipes(RECIPES_DIR)
-    print('Recipes are: %s' % [r.name for r in recipes])
-
-    _print_ok('Build listed recipes')
-    for recipe in recipes:
-        build_ok = build_recipe(recipe)
-
-        if build_ok:
-            provide_mpm_for_recipe(recipe)
-
-    _print_ok('Test listed recipes')
+    all_green = True
     for recipe in recipes:
         if recipe.has_demo_package:
             if test_recipe(recipe):
                 print('Test for %s passed.' % recipe.name)
             else:
                 _print_err('Test for %s failed.' % recipe.name)
+                all_green = False
         else:
             _print_warn('Recipe %s contains no demo package' % recipe.name)
+
+    return all_green
+
+
+if __name__ == '__main__':
+    prepare_osv_scripts()
+    clear_result_dir()
+    provide_loader_image()
+
+    recipes = select_recipes()
+    print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
+
+    build_and_provide_recipe_list(recipes)
+
+    if os.environ.get('SKIP_TESTS', 'no').lower() in ['y', 'yes', 'true', '1']:
+        _print_warn('Skipping all tests since SKIP_TESTS environment variable is set')
+    else:
+        test_recipe_list(recipes)
 
