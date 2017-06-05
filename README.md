@@ -12,7 +12,7 @@ $ docker pull mikelangelo-project/capstan-packages
 development. Instead you have to build it on your own (see section below). Building Docker container
 is a very simple task, but you have to wait quite some time.*
 
-Having it on your machine, you can run it with:
+Once having it on your machine, you can run it with:
 ```bash
 $ mkdir ./result
 $ docker run -it --volume="$PWD/result:/result" mikelangelo-project/capstan-packages
@@ -40,6 +40,9 @@ You can, however, customize container behavior by setting following environment 
 |-----|---------------|--------|
 | `RECIPES` |  eu.mikelangelo-project.osv.nfs | builds only recipes listed (comma-separated) |
 | `SKIP_TESTS` |  no | do not run tests after building (tests are run by default) |
+| `SHARE_OSV_DIR` | yes | should each recipe get its own copy of osv src dir (yes by default) |
+| `SHOW_STDOUT` | no | show stdout/stderr of build.sh also on success (no by default) |
+| `TEST_RECIPES` | eu.mikelangelo-project.osv.nfs | test only recipes listed (comma-separated) |
 
 To build only `nfs` package, for example, you can use following command:
 ```bash
@@ -50,14 +53,14 @@ $ docker run -it --volume="$PWD/result:/result" --env RECIPES=eu.mikelangelo-pro
 This section describes how to build `mikelangelo-project/capstan-packages` from scratch. Result will
 be Docker image in your local Docker repository.
 
-Go ahead, clone this repository:
+Go ahead, clone our repository:
 ```bash
 $ git clone git@github.com:mikelangelo-project/capstan-packages.git
 ```
-To build the container excute:
+To build the container execute:
 ```bash
 $ cd capstan-packages
-$ docker build -t mikelangelo-project/osv-docker-build .
+$ docker build -t mikelangelo-project/capstan-packages .
 ```
 Building will take somewhat 10 minutes since it does many things:
 

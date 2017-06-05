@@ -10,6 +10,7 @@ import glob
 OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
 RESULTS_DIR = '/result'
+SHARE_OSV_DIR = False
 
 # final osv-loader location e.g. /results/osv-loader.qemu
 result_osv_loader_file = os.path.join(RESULTS_DIR, 'osv-loader.qemu')
@@ -75,7 +76,7 @@ class Recipe:
         self.osv_dir = OSV_DIR
 
         # should be this recipe built using clone of osv dir (set to False for debugging to speed things up)
-        self.do_isolate_osv_dir = True
+        self.do_isolate_osv_dir = not SHARE_OSV_DIR
         # does this recipe contain demo package
         self.has_demo_package = os.path.isfile(self.demo_run_yaml)
 
@@ -85,7 +86,7 @@ def prepare_osv_scripts():
     prepare_osv_scripts() prepares whatever is needed when container is first run after being built. Namely,
     it applies patches to selected OSv scripts.      
     """
-    _print_ok('Prepare OSv scripts')
+    _print_ok('Preparing OSv scripts')
 
     with open('/common/skip_vm_uploads.patch', 'r') as f:
         c = 'patch -p1'
@@ -169,16 +170,15 @@ def available_recipes(root):
     return set([name for name in os.listdir(root) if os.path.isdir(os.path.join(root, name))])
 
 
-def select_recipes():
+def select_recipes(filter_names):
     """
     select_recipes() provides a list of Recipe instances that are to be built. By default it returns a list of
     all available recipes, but if RECIPES environment variable is set, it applies it as filter.
     :return: list of Recipe instances
     """
-    _print_ok('Select recipes')
+    _print_ok('Selecting recipes')
 
     all_recipe_names = available_recipes(RECIPES_DIR)
-    filter_names = os.environ.get('RECIPES')
     if filter_names:
         print('Filtering recipes based on RECIPES environment variable')
         filter_names = set([name for name in filter_names.split(',')])
@@ -235,6 +235,9 @@ def build_recipe(recipe):
         print('--- STDOUT: ---\n%s' % output)
         print('--- STDERR: ---\n%s' % error)
         return False
+    elif os.environ.get('SHOW_STDOUT'):
+        print('--- STDOUT: ---\n%s' % output)
+        print('--- STDERR: ---\n%s' % error)
 
     print('Verifying that result contains meta/package.yaml')
     if not os.path.isfile(recipe.result_orig_yaml_file):
@@ -426,12 +429,23 @@ def test_recipe_list(recipes):
     return all_green
 
 
+def override_global_variables():
+    global SHARE_OSV_DIR
+    SHARE_OSV_DIR = os.environ.get('SHARE_OSV_DIR', 'no').lower() in ['y', 'yes', 'true', '1']
+
+    if SHARE_OSV_DIR:
+        _print_warn('OSv source directory will be shared due to SHARE_OSV_DIR being set. Recipes may interfere.')
+
+
+
 if __name__ == '__main__':
+    override_global_variables()
+
     prepare_osv_scripts()
     clear_result_dir()
     provide_loader_image()
 
-    recipes = select_recipes()
+    recipes = select_recipes(os.environ.get('RECIPES'))
     print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
 
     build_and_provide_recipe_list(recipes)
@@ -439,5 +453,6 @@ if __name__ == '__main__':
     if os.environ.get('SKIP_TESTS', 'no').lower() in ['y', 'yes', 'true', '1']:
         _print_warn('Skipping all tests since SKIP_TESTS environment variable is set')
     else:
+        recipes = select_recipes(os.environ.get('TEST_RECIPES'))
         test_recipe_list(recipes)
 
