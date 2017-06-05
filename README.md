@@ -75,3 +75,6 @@ When building completes, you can verify that the Docker image is in your reposit
 $ docker images | grep mikelangelo-project/capstan-packages
 mikelangelo-project/capstan-packages   latest   bee017f1e55c   16 hours ago   2.82 GB
 ```
+
+## More Documentation
+* [Adding New Recipe](doc/recipes.md)
