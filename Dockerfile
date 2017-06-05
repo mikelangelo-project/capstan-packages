@@ -28,6 +28,21 @@ ENV PATH=$GOBIN:/usr/local/go/bin:$PATH
 RUN go get github.com/mikelangelo-project/capstan && \      
     go install github.com/mikelangelo-project/capstan
 
+# Install Oracle JDK
+RUN apt-get install -y software-properties-common
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    add-apt-repository -y ppa:webupd8team/java && \
+    apt-get update && \
+    apt-get install -y oracle-java8-installer && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/oracle-jdk8-installer
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle   
+
+# Install C++ dependencies
+RUN apt-get update -y
+RUN apt-get install -y libyaml-cpp-dev
+RUN apt-get install -y libssl-dev
+
 # Copy files into container
 COPY docker_files /
 

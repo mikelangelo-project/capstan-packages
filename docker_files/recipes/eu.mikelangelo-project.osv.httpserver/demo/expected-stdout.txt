@@ -1,0 +1,10 @@
+Allowed options:
+  --help                produce help message
+  --access-allow arg    Set the Access-Control-Allow-Origin to \*\. Note the 
+                        security risk
+  --ipaddress arg       set the ip address
+  --port arg            set the port
+  --cert arg            path to server's SSL certificate
+  --key arg             path to server's private key
+  --cacert arg          path to CA certificate
+  --ssl                 enable SSL
