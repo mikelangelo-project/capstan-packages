@@ -38,11 +38,12 @@ You can, however, customize container behavior by setting following environment 
 
 | ENV | EXAMPLE VALUE | EFFECT |
 |-----|---------------|--------|
-| `RECIPES` |  eu.mikelangelo-project.osv.nfs | builds only recipes listed (comma-separated) |
+| `RECIPES` |  eu.mikelangelo-project.osv.nfs | builds only recipes listed (comma-separated), `[]` means empty list (don't use brackets for non-empty list) |
 | `SKIP_TESTS` |  no | do not run tests after building (tests are run by default) |
 | `SHARE_OSV_DIR` | yes | should each recipe get its own copy of osv src dir (yes by default) |
 | `SHOW_STDOUT` | no | show stdout/stderr of build.sh also on success (no by default) |
 | `TEST_RECIPES` | eu.mikelangelo-project.osv.nfs | test only recipes listed (comma-separated) |
+| `KEEP_RECIPES` | no | keep packages that are already in /result dir when mounted |
 
 To build only `nfs` package, for example, you can use following command:
 ```bash

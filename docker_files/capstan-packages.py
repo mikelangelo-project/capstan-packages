@@ -135,6 +135,18 @@ def clear_result_dir():
             shutil.rmtree(path)
 
 
+def clear_result_dir_specific(recipes):
+    """
+    clear_result_dir_specific() deletes delievered results of selected recipes.
+    """
+    _print_ok('Clearing specific packages from result directory %s' % RESULTS_DIR)
+
+    for recipe in recipes:
+        shutil.rmtree(recipe.result_dir, ignore_errors=True)
+        os.unlink(recipe.result_mpm_file)
+        os.unlink(recipe.result_yaml_file)
+
+
 def provide_loader_image():
     """
     provide_mike_osv_loader() copies loader image from OSv build directory into /result directory.
@@ -178,6 +190,10 @@ def select_recipes(filter_names):
     """
     _print_ok('Selecting recipes')
 
+    if filter_names == '[]':
+        print('Returning empty recipe list')
+        return []
+
     all_recipe_names = available_recipes(RECIPES_DIR)
     if filter_names:
         print('Filtering recipes based on RECIPES environment variable')
@@ -201,7 +217,7 @@ def build_recipe(recipe):
     _print_ok('Building recipe %s' % recipe.name)
 
     if recipe.do_isolate_osv_dir:
-        print('Preparing isolated osv folder')
+        print('Preparing isolated osv directory')
         osv_dir_clone = os.path.join(tempfile.mkdtemp(), 'osv')
         shutil.copytree(recipe.osv_dir, osv_dir_clone, symlinks=True)
         recipe.osv_dir = osv_dir_clone
@@ -235,7 +251,7 @@ def build_recipe(recipe):
         print('--- STDOUT: ---\n%s' % output)
         print('--- STDERR: ---\n%s' % error)
         return False
-    elif os.environ.get('SHOW_STDOUT'):
+    elif env_bool('SHOW_STDOUT'):
         print('--- STDOUT: ---\n%s' % output)
         print('--- STDERR: ---\n%s' % error)
 
@@ -431,26 +447,33 @@ def test_recipe_list(recipes):
 
 def override_global_variables():
     global SHARE_OSV_DIR
-    SHARE_OSV_DIR = os.environ.get('SHARE_OSV_DIR', 'no').lower() in ['y', 'yes', 'true', '1']
+    SHARE_OSV_DIR = env_bool('SHARE_OSV_DIR')
 
     if SHARE_OSV_DIR:
         _print_warn('OSv source directory will be shared due to SHARE_OSV_DIR being set. Recipes may interfere.')
 
 
+def env_bool(name):
+    """
+    env_bool() returns True if environment variable is set and False otherwise.
+    :param name: name of the environment variable
+    :return: boolean
+    """
+    return os.environ.get(name, 'no').lower() in ['y', 'yes', 'true', '1']
+
 
 if __name__ == '__main__':
     override_global_variables()
-
     prepare_osv_scripts()
-    clear_result_dir()
-    provide_loader_image()
-
     recipes = select_recipes(os.environ.get('RECIPES'))
     print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
 
+    clear_result_dir_specific(recipes) if env_bool('KEEP_RECIPES') else clear_result_dir()
+    provide_loader_image()
+
     build_and_provide_recipe_list(recipes)
 
-    if os.environ.get('SKIP_TESTS', 'no').lower() in ['y', 'yes', 'true', '1']:
+    if env_bool('SKIP_TESTS'):
         _print_warn('Skipping all tests since SKIP_TESTS environment variable is set')
     else:
         recipes = select_recipes(os.environ.get('TEST_RECIPES'))
