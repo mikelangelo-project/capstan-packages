@@ -6,7 +6,6 @@ import shutil
 import tempfile
 import re
 import glob
-import time
 from timeit import default_timer
 
 OSV_DIR = '/git-repos/osv'
@@ -163,8 +162,10 @@ def clear_result_dir_specific(recipes):
 
     for recipe in recipes:
         shutil.rmtree(recipe.result_dir, ignore_errors=True)
-        os.unlink(recipe.result_mpm_file)
-        os.unlink(recipe.result_yaml_file)
+        if os.path.isfile(recipe.result_mpm_file):
+            os.unlink(recipe.result_mpm_file)
+        if os.path.isfile(recipe.result_yaml_file):
+            os.unlink(recipe.result_yaml_file)
 
 
 def provide_loader_image():
@@ -468,6 +469,8 @@ def test_recipe_list(recipes):
 
     if failed_recipes:
         _print_err('Testing recipes failed for following recipes:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
+    else:
+        _print_ok('All tests passed without errors.')
 
     return failed_recipes
 
