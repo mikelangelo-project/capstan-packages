@@ -43,6 +43,9 @@ RUN apt-get update -y
 RUN apt-get install -y libyaml-cpp-dev
 RUN apt-get install -y libssl-dev
 
+# Install LUA rock dependencies
+RUN apt-get install -y unzip
+
 # Copy files into container
 COPY docker_files /
 

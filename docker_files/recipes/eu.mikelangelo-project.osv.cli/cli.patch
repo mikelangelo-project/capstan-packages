@@ -1,0 +1,12 @@
+diff --git a/modules/cli/module.py b/modules/cli/module.py
+index e38aa2d..8c94087 100644
+--- a/modules/cli/module.py
++++ b/modules/cli/module.py
+@@ -5,7 +5,6 @@ from osv.modules import api
+ require('lua')
+ require('ncurses')
+ require('libedit')
+-require_running('httpserver')
+ 
+ usr_files = FileMap()
+ usr_files.add('${OSV_BASE}/modules/cli').to('/cli') \
