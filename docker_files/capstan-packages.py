@@ -6,6 +6,8 @@ import shutil
 import tempfile
 import re
 import glob
+import time
+from timeit import default_timer
 
 OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
@@ -16,6 +18,24 @@ SHARE_OSV_DIR = False
 result_osv_loader_file = os.path.join(RESULTS_DIR, 'osv-loader.qemu')
 # final osv-loader index location e.g. /results/index.yaml
 result_osv_loader_index_file = os.path.join(RESULTS_DIR, 'index.yaml')
+
+
+class Timer:
+    def __init__(self):
+        self.global_t = default_timer()
+        self.t = default_timer()
+
+    def start(self):
+        self.t = default_timer()
+
+    def report(self, msg):
+        print('Time elapsed for %s: %.2f seconds' % (msg, default_timer() - self.t))
+
+    def report_global(self):
+        print('\n\nTotal time elapsed: %.2f seconds' % (default_timer() - self.global_t))
+
+
+TIMER = Timer()
 
 
 class Colors:
@@ -314,8 +334,10 @@ def build_and_provide_recipe_list(recipes):
     :param recipes: list of Recipe instances
     """
     for recipe in recipes:
+        TIMER.start()
         if build_recipe(recipe):
             provide_mpm_for_recipe(recipe)
+        TIMER.report('build recipe')
 
 
 def prepare_test_capstan_root():
@@ -427,22 +449,27 @@ def test_recipe_list(recipes):
     test_recipe_list() tests all recipes that have demo package in place. Make sure that recipes are
     built and provided prior calling this function.
     :param recipes: list of Recipe instances
-    :return: True if all tests were successfully, False otherwise
+    :return: list of failed recipes
     """
     _print_ok('Testing recipes')
 
-    all_green = True
+    failed_recipes = []
     for recipe in recipes:
         if recipe.has_demo_package:
+            TIMER.start()
             if test_recipe(recipe):
                 print('Test for %s passed.' % recipe.name)
             else:
                 _print_err('Test for %s failed.' % recipe.name)
-                all_green = False
+                failed_recipes.append(recipe)
+            TIMER.report('test recipe')
         else:
             _print_warn('Recipe %s contains no demo package' % recipe.name)
 
-    return all_green
+    if failed_recipes:
+        _print_err('Testing recipes failed for following recipes:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
+
+    return failed_recipes
 
 
 def override_global_variables():
@@ -478,4 +505,6 @@ if __name__ == '__main__':
     else:
         recipes = select_recipes(os.environ.get('TEST_RECIPES'))
         test_recipe_list(recipes)
+
+    TIMER.report_global()
 
