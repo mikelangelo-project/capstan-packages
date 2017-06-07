@@ -46,6 +46,7 @@ RUN apt-get install -y libssl-dev
 # Install LUA rock dependencies
 RUN apt-get install -y unzip
 RUN apt-get install -y p11-kit maven
+RUN apt-get install -y autoconf git zip
 
 # Copy files into container
 COPY docker_files /
