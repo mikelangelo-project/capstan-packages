@@ -483,13 +483,13 @@ def override_global_variables():
         _print_warn('OSv source directory will be shared due to SHARE_OSV_DIR being set. Recipes may interfere.')
 
 
-def env_bool(name):
+def env_bool(name, default='no'):
     """
     env_bool() returns True if environment variable is set and False otherwise.
     :param name: name of the environment variable
     :return: boolean
     """
-    return os.environ.get(name, 'no').lower() in ['y', 'yes', 'true', '1']
+    return os.environ.get(name, default).lower() in ['y', 'yes', 'true', '1']
 
 
 if __name__ == '__main__':
@@ -498,7 +498,7 @@ if __name__ == '__main__':
     recipes = select_recipes(os.environ.get('RECIPES'))
     print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
 
-    clear_result_dir_specific(recipes) if env_bool('KEEP_RECIPES') else clear_result_dir()
+    clear_result_dir_specific(recipes) if env_bool('KEEP_RECIPES', 'yes') else clear_result_dir()
     provide_loader_image()
 
     build_and_provide_recipe_list(recipes)
