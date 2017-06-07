@@ -217,7 +217,7 @@ def select_recipes(filter_names):
 
     all_recipe_names = available_recipes(RECIPES_DIR)
     if filter_names:
-        print('Filtering recipes based on RECIPES environment variable')
+        print('Filtering recipes based on environment variable')
         filter_names = set([name for name in filter_names.split(',')])
 
         if not filter_names.issubset(all_recipe_names):
