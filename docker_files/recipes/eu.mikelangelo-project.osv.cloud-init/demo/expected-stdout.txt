@@ -1,0 +1,8 @@
+Allowed options:
+  --help                produce help message
+  --skip-error          do not stop on error
+  --force-probe         force data source probing
+  --file arg            an init file
+  --server arg          a server to read the file from. must come with a --url
+  --url arg             a url at the server
+  --port arg (=80)      a port at the server

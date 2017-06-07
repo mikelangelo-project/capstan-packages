@@ -1,0 +1,19 @@
+diff --git a/modules/cloud-init/cmdline b/modules/cloud-init/cmdline
+index 00c819e..3cebf6b 100644
+--- a/modules/cloud-init/cmdline
++++ b/modules/cloud-init/cmdline
+@@ -1 +1 @@
+-/usr/mgmt/cloud-init.so;
++/usr/mgmt/cloud-init.so --force-probe;
+diff --git a/modules/cloud-init/module.py b/modules/cloud-init/module.py
+index 7586eb6..9411eca 100644
+--- a/modules/cloud-init/module.py
++++ b/modules/cloud-init/module.py
+@@ -10,7 +10,6 @@ usr_files.add(os.path.join(_module, 'cloud-init.so')).to('/usr/mgmt/cloud-init.s
+ usr_files.add(os.path.join(_module, 'cloud-init.yaml')).to('/usr/mgmt/cloud-init.yaml')
+ usr_files.add(os.path.join(_module, 'cmdline')).to('/init/00-cmdline')
+ 
+-api.require('httpserver')
+ api.require('libyaml')
+ 
+ #default = api.run('/usr/mgmt/cloud-init.so --skip-error --file /usr/mgmt/cloud-init.yaml')
