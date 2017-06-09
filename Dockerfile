@@ -11,8 +11,8 @@ RUN mkdir git-repos /result
 RUN cd git-repos && \
     git clone https://github.com/cloudius-systems/osv.git
 
-WORKDIR git-repos/osv    
-    
+WORKDIR git-repos/osv
+
 RUN git submodule update --init --recursive
 RUN make -j3
 
@@ -25,7 +25,7 @@ ENV GOBIN=$GOPATH/bin
 ENV PATH=$GOBIN:/usr/local/go/bin:$PATH
 
 # Build Capstan from source
-RUN go get github.com/mikelangelo-project/capstan && \      
+RUN go get github.com/mikelangelo-project/capstan && \
     go install github.com/mikelangelo-project/capstan
 
 # Install Oracle JDK
@@ -36,7 +36,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
     apt-get install -y oracle-java8-installer && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/oracle-jdk8-installer
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle   
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Install C++ dependencies
 RUN apt-get update -y
@@ -48,9 +48,13 @@ RUN apt-get install -y unzip
 RUN apt-get install -y p11-kit maven
 RUN apt-get install -y autoconf git zip
 
+# Clone mike-apps
+RUN git clone https://github.com/mikelangelo-project/mike-apps.git
+
 # Copy files into container
 COPY docker_files /
 
+WORKDIR git-repos/osv
 CMD python /capstan-packages.py; echo "\n--- Script exited, container will now sleep ---\n"; sleep infinity
 
 #

@@ -139,6 +139,22 @@ def prepare_osv_scripts():
             print('--- STDOUT: ---\n%s' % output)
             print('--- STDERR: ---\n%s' % error)
 
+    with open('/common/add_mike_apps_to_config.patch', 'r') as f:
+        c = 'patch -p1'
+        p = subprocess.Popen(
+            c.split(),
+            cwd=OSV_DIR,
+            stdin=f,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        output, error = p.communicate()
+
+        if p.returncode != 0:
+            _print_err('Applying patch /common/add_mike_apps_to_config.patch returned non-zero status code')
+            print('--- STDOUT: ---\n%s' % output)
+            print('--- STDERR: ---\n%s' % error)
+
 
 def clear_result_dir():
     """

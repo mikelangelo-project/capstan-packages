@@ -1,0 +1,14 @@
+diff --git a/config.json b/config.json
+index 097a16f..6d3ba2f 100644
+--- a/config.json
++++ b/config.json
+@@ -6,7 +6,8 @@
+         },
+     "repositories": [
+         "${OSV_BASE}/apps",
+-        "${OSV_BASE}/modules"
++        "${OSV_BASE}/modules",
++        "${OSV_BASE}/../mike-apps"
+     ]
+    },
+    "default": [ "cloud-init", "httpserver" ]
