@@ -51,6 +51,10 @@ RUN apt-get install -y autoconf git zip
 # Clone mike-apps
 RUN git clone https://github.com/mikelangelo-project/mike-apps.git
 
+# Compile commonly used modules in advance
+RUN make -C modules/libtools
+RUN make -C modules/httpserver
+
 # Copy files into container
 COPY docker_files /
 

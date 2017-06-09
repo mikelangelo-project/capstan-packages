@@ -14,12 +14,6 @@ echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
 
 echo "Exporting cloud-init"
 
-# Must have HTTP server compiled or else loader fails
-echo "Build prerequsite: httpserver"
-cd ${OSV_DIR}
-${OSV_DIR}/scripts/build image=httpserver
-echo "Build prerequsite done"
-
 # Patch the module file to exclude the dependency on HTTP server
 cd ${OSV_DIR}
 patch -p1 < ${RECIPE_DIR}/cloud-init.patch
