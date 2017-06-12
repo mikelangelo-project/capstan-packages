@@ -12,6 +12,7 @@ OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
 RESULTS_DIR = '/result'
 SHARE_OSV_DIR = False
+LOG_DIR = os.path.join(RESULTS_DIR, 'log')
 
 # final osv-loader location e.g. /results/osv-loader.qemu
 result_osv_loader_file = os.path.join(RESULTS_DIR, 'osv-loader.qemu')
@@ -98,6 +99,9 @@ class Recipe:
         self.do_isolate_osv_dir = not SHARE_OSV_DIR
         # does this recipe contain demo package
         self.has_demo_package = os.path.isfile(self.demo_run_yaml)
+        # where does this recipe write stdout/stderr of build.sh to
+        self.stdout_file = os.path.join(LOG_DIR, '%s.stdout' % self.name)
+        self.stderr_file = os.path.join(LOG_DIR, '%s.stderr' % self.name)
 
 
 def prepare_osv_scripts():
@@ -154,6 +158,12 @@ def prepare_osv_scripts():
             _print_err('Applying patch /common/add_mike_apps_to_config.patch returned non-zero status code')
             print('--- STDOUT: ---\n%s' % output)
             print('--- STDERR: ---\n%s' % error)
+
+
+def prepare_log_dir():
+    shutil.rmtree(LOG_DIR, ignore_errors=True)
+    os.makedirs(LOG_DIR)
+    os.chmod(LOG_DIR, 0777)
 
 
 def clear_result_dir():
@@ -264,34 +274,32 @@ def build_recipe(recipe):
     os.makedirs(recipe.result_dir)
 
     print('Running build.sh script')
-    p = subprocess.Popen(
-        './build.sh',
-        cwd=recipe.dir,
-        env={
-            'RECIPE_DIR': recipe.dir,
-            'PACKAGE_RESULT_DIR': recipe.result_dir,
-            'PACKAGE_NAME': recipe.name,
 
-            'OSV_DIR': recipe.osv_dir,
-            'OSV_BUILD_DIR': os.path.join(recipe.osv_dir, 'build', 'release.x64'),
-            'GCCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'gcc.bin'),
-            'MISCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'misc.bin'),
-            'PATH': os.environ.get('PATH'),
-            'HOME': '/root',
-        },
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    output, error = p.communicate()
+    with open(recipe.stdout_file, 'w') as stdout_f, open(recipe.stderr_file, 'w') as stderr_f:
+        p = subprocess.Popen(
+            './build.sh',
+            cwd=recipe.dir,
+            env={
+                'RECIPE_DIR': recipe.dir,
+                'PACKAGE_RESULT_DIR': recipe.result_dir,
+                'PACKAGE_NAME': recipe.name,
+
+                'OSV_DIR': recipe.osv_dir,
+                'OSV_BUILD_DIR': os.path.join(recipe.osv_dir, 'build', 'release.x64'),
+                'GCCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'gcc.bin'),
+                'MISCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'misc.bin'),
+                'PATH': os.environ.get('PATH'),
+                'HOME': '/root',
+            },
+            stdout=stdout_f,
+            stderr=stderr_f,
+        )
+        p.communicate()
 
     if p.returncode != 0:
         _print_err('build.sh returned non-zero status code for recipe %s:' % recipe.dir)
-        print('--- STDOUT: ---\n%s' % output)
-        print('--- STDERR: ---\n%s' % error)
+        print('Please see log files inside %s directory' % LOG_DIR)
         return False
-    elif env_bool('SHOW_STDOUT'):
-        print('--- STDOUT: ---\n%s' % output)
-        print('--- STDERR: ---\n%s' % error)
 
     print('Verifying that result contains meta/package.yaml')
     if not os.path.isfile(recipe.result_orig_yaml_file):
@@ -512,6 +520,7 @@ def env_bool(name, default='no'):
 if __name__ == '__main__':
     override_global_variables()
     prepare_osv_scripts()
+    prepare_log_dir()
     recipes = select_recipes(os.environ.get('RECIPES'))
     print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
 
