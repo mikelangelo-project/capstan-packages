@@ -277,6 +277,7 @@ def build_recipe(recipe):
             'GCCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'gcc.bin'),
             'MISCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'misc.bin'),
             'PATH': os.environ.get('PATH'),
+            'HOME': '/root',
         },
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
