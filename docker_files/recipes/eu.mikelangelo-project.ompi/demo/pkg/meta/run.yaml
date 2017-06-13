@@ -1,0 +1,6 @@
+runtime: native
+
+config_set:
+  default:
+    bootcmd: /usr/bin/mpirun --help --allow-run-as-root
+config_set_default: default

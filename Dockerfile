@@ -58,6 +58,8 @@ RUN make -C modules/httpserver
 RUN apt-get install -y libxml2-utils xsltproc libwxbase3.0-dev libncurses5-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev \
     wx3.0-headers
 
+RUN apt-get install -y libnuma-dev libibverbs-dev libtool flex
+
 # Copy files into container
 COPY docker_files /
 

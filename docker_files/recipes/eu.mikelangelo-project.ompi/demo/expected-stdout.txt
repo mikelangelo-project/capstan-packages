@@ -1,0 +1,16 @@
+mpirun (Open MPI) 1.10.2a1
+
+Usage: mpirun [OPTION]...  [PROGRAM]...
+Start the given program using Open RTE
+
+   -allow-run-as-root|--allow-run-as-root
+                         Allow execution as root (STRONGLY DISCOURAGED)
+   -am <arg0>            Aggregate MCA parameter set file list
+   --app <arg0>          Provide an appfile; ignore all other command line
+                         options
+   --bind-to <arg0>      Policy for binding processes. Allowed values: none,
+                         hwthread, core, l1cache, l2cache, l3cache, socket,
+                         numa, board ("none" is the default when
+                         oversubscribed, "core" is the default when np<=2,
+                         and "socket" is the default when np>2). Allowed
+                         qualifiers: overload-allowed, if-supported
