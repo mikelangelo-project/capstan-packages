@@ -1,0 +1,6 @@
+runtime: native
+
+config_set:
+  default:
+    bootcmd: /usr/bin/pisoFoam.so -help
+config_set_default: default
