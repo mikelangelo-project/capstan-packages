@@ -54,11 +54,14 @@ RUN git clone https://github.com/mikelangelo-project/mike-apps.git
 # Compile commonly used modules in advance
 RUN make -C modules/libtools
 RUN make -C modules/httpserver
+RUN make -C mike-apps/OpenFOAM
 
 RUN apt-get install -y libxml2-utils xsltproc libwxbase3.0-dev libncurses5-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev \
     wx3.0-headers
 
 RUN apt-get install -y libnuma-dev libibverbs-dev libtool flex
+RUN apt-get install -y bison cmake zlib1g-dev libopenmpi-dev openmpi-bin qt4-dev-tools libqt4-dev libqt4-opengl-dev \
+    freeglut3-dev libqtwebkit-dev gnuplot libreadline-dev libncurses-dev libxt-dev libscotch-dev libcgal-dev
 
 # Copy files into container
 COPY docker_files /
