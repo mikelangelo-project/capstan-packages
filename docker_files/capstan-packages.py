@@ -100,8 +100,8 @@ class Recipe:
         # does this recipe contain demo package
         self.has_demo_package = os.path.isfile(self.demo_run_yaml)
         # where does this recipe write stdout/stderr of build.sh to
-        self.stdout_file = os.path.join(LOG_DIR, '%s.stdout' % self.name)
-        self.stderr_file = os.path.join(LOG_DIR, '%s.stderr' % self.name)
+        self.log_name = '%s.log' % self.name
+        self.log_file = os.path.join(LOG_DIR, self.log_name)
 
 
 def prepare_osv_scripts():
@@ -161,7 +161,8 @@ def prepare_osv_scripts():
 
 
 def prepare_log_dir():
-    shutil.rmtree(LOG_DIR, ignore_errors=True)
+    if os.path.isdir(LOG_DIR):
+        shutil.rmtree(LOG_DIR)
     os.makedirs(LOG_DIR)
     os.chmod(LOG_DIR, 0777)
 
@@ -274,8 +275,9 @@ def build_recipe(recipe):
     os.makedirs(recipe.result_dir)
 
     print('Running build.sh script')
+    print('(meanwhile you can use `tail -F result/%s` to observe logs)' % recipe.log_name)
 
-    with open(recipe.stdout_file, 'w') as stdout_f, open(recipe.stderr_file, 'w') as stderr_f:
+    with open(recipe.log_file, 'w') as f:
         p = subprocess.Popen(
             './build.sh',
             cwd=recipe.dir,
@@ -291,10 +293,10 @@ def build_recipe(recipe):
                 'PATH': os.environ.get('PATH'),
                 'HOME': '/root',
             },
-            stdout=stdout_f,
-            stderr=stderr_f,
+            stdout=f,
+            stderr=f,
         )
-        p.communicate()
+        p.wait()
 
     if p.returncode != 0:
         _print_err('build.sh returned non-zero status code for recipe %s:' % recipe.dir)
