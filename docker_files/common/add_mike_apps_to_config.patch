@@ -8,7 +8,7 @@ index 097a16f..6d3ba2f 100644
          "${OSV_BASE}/apps",
 -        "${OSV_BASE}/modules"
 +        "${OSV_BASE}/modules",
-+        "${OSV_BASE}/../mike-apps"
++        "${OSV_BASE}/mike-apps"
      ]
     },
     "default": [ "cloud-init", "httpserver" ]
