@@ -275,7 +275,7 @@ def build_recipe(recipe):
     os.makedirs(recipe.result_dir)
 
     print('Running build.sh script')
-    print('(meanwhile you can use `tail -F result/%s` to observe logs)' % recipe.log_name)
+    print('(meanwhile you can use `tail -F result/log/%s` to observe logs)' % recipe.log_name)
 
     with open(recipe.log_file, 'w') as f:
         p = subprocess.Popen(
