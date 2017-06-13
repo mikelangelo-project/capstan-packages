@@ -13,6 +13,7 @@ RECIPES_DIR = '/recipes'
 RESULTS_DIR = '/result'
 SHARE_OSV_DIR = False
 LOG_DIR = os.path.join(RESULTS_DIR, 'log')
+COMMON_DIR = '/common'
 
 # final osv-loader location e.g. /results/osv-loader.qemu
 result_osv_loader_file = os.path.join(RESULTS_DIR, 'osv-loader.qemu')
@@ -292,6 +293,8 @@ def build_recipe(recipe):
                 'MISCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'misc.bin'),
                 'PATH': os.environ.get('PATH'),
                 'HOME': '/root',
+
+                'COMMON_DIR': COMMON_DIR,
             },
             stdout=f,
             stderr=f,
