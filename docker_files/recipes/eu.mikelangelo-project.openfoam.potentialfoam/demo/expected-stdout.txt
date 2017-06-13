@@ -1,0 +1,2 @@
+--> FOAM FATAL ERROR in Foam::findEtcFiles() : could not find mandatory file
+    'controlDict'
