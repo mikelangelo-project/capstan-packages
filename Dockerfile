@@ -61,7 +61,7 @@ RUN apt-get install -y libxml2-utils xsltproc libwxbase3.0-dev libncurses5-dev l
 # Copy files into container
 COPY docker_files /
 
-WORKDIR git-repos/osv
+WORKDIR /git-repos/osv
 CMD python /capstan-packages.py; echo "\n--- Script exited, container will now sleep ---\n"; sleep infinity
 
 #
