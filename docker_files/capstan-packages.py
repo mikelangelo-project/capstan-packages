@@ -462,6 +462,7 @@ def test_recipe(recipe):
     expected = re.sub('\s+', '\\s+', expected).strip()
     expected = expected.replace('(', '\(').replace(')', '\)')
     expected = expected.replace('[', '\[').replace(']', '\]')
+    expected = expected.replace('"', '\"')
     is_ok = re.search(expected, output) is not None
 
     if not is_ok:
