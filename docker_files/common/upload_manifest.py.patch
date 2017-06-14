@@ -1,28 +1,39 @@
 diff --git a/scripts/upload_manifest.py b/scripts/upload_manifest.py
-index de570f0..1e21d94 100755
+index de570f0..65b1409 100755
 --- a/scripts/upload_manifest.py
 +++ b/scripts/upload_manifest.py
 @@ -1,6 +1,6 @@
  #!/usr/bin/python
- 
+
 -import os, optparse, io, subprocess, socket, threading, stat, sys, re
 +import os, optparse, io, subprocess, socket, threading, stat, sys, re, shutil
- 
+
  try:
      import StringIO
-@@ -71,7 +71,7 @@ def read_manifest(fn):
+@@ -61,8 +61,9 @@ def read_manifest(fn):
+     with open(fn, 'r') as f:
+         for line in f:
+             line = line.rstrip();
++            if not line.strip(): continue
+             if comment.match(line): continue
+-            components = line.split(": ", 2)
++            components = line.split(":", 2)
+             guestpath = components[0].strip();
+             hostpath = components[1].strip()
+             ret.append((guestpath, hostpath))
+@@ -71,7 +72,7 @@ def read_manifest(fn):
  def upload(osv, manifest, depends):
      manifest = [(x, y % defines) for (x, y) in manifest]
      files = list(expand(manifest))
 -    files = [(x, unsymlink(y)) for (x, y) in files]
 +    files = [(x, unsymlink(y % defines)) for (x, y) in files]
- 
+
      # Wait for the guest to come up and tell us it's listening
      while True:
-@@ -167,6 +167,61 @@ def upload(osv, manifest, depends):
+@@ -167,6 +168,61 @@ def upload(osv, manifest, depends):
      s.recv(1)
      s.close()
- 
+
 +# This will export the package based on the provided manifest file. It uses the same mechanism to
 +# get the files that need copying as the actual upload process. The only current limitation is
 +# support for links in OSv, e.g., /etc/mnttab: ->/proc/mounts.
@@ -80,8 +91,8 @@ index de570f0..1e21d94 100755
 +
  def main():
      make_option = optparse.make_option
- 
-@@ -190,6 +245,10 @@ def main():
+
+@@ -190,6 +246,10 @@ def main():
                          metavar='VAR=DATA',
                          action='callback',
                          callback=add_var),
@@ -90,34 +101,34 @@ index de570f0..1e21d94 100755
 +                        help='exports the contents of the usr.manifest into a given folder',
 +                        metavar='FILE'),
      ])
- 
+
      (options, args) = opt.parse_args()
-@@ -199,17 +258,21 @@ def main():
+@@ -199,17 +259,21 @@ def main():
          depends = file(options.depends, 'w')
      manifest = read_manifest(options.manifest)
- 
+
 -    depends.write('%s: \\\n' % (options.output,))
 +    if options.export:
 +        export_package(manifest, options.export)
 +
 +    else:
 +        depends.write('%s: \\\n' % (options.output,))
- 
+
 -    image_path = os.path.abspath(options.output)
 -    osv = subprocess.Popen('cd ../..; scripts/run.py --vnc none -m 512 -c1 -i %s -u -s -e "--norandom --nomount --noinit /tools/mkfs.so; /tools/cpiod.so --prefix /zfs/zfs/; /zfs.so set compression=off osv" --forward tcp:10000::10000' % image_path, shell=True, stdout=subprocess.PIPE)
 +        image_path = os.path.abspath(options.output)
 +        osv = subprocess.Popen('cd ../..; scripts/run.py --vnc none -m 512 -c1 -i %s -u -s -e "--norandom --nomount --noinit /tools/mkfs.so; /tools/cpiod.so --prefix /zfs/zfs/; /zfs.so set compression=off osv" --forward tcp:10000::10000' % image_path, shell=True, stdout=subprocess.PIPE)
- 
+
 -    upload(osv, manifest, depends)
 +        upload(osv, manifest, depends)
- 
+
 -    osv.wait()
 +        osv.wait()
- 
+
 -    depends.write('\n\n')
 -    depends.close()
 +        depends.write('\n\n')
 +        depends.close()
- 
+
  if __name__ == "__main__":
      main()
