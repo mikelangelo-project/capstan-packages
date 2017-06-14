@@ -1,0 +1,6 @@
+runtime: native
+
+config_set:
+  default: 
+    bootcmd: /java.so -version
+config_set_default: default
