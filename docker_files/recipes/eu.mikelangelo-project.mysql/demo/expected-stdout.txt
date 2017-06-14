@@ -1,0 +1,12 @@
+/usr/bin/mysqld  Ver 5.6.21 for Linux on x86_64 (Source distribution)
+Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Starts the MySQL database server.
+
+Usage: /usr/bin/mysqld [OPTIONS]
+
+For more help options (several pages), use mysqld --verbose --help.
