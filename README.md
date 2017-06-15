@@ -19,12 +19,31 @@ $ docker run -it --volume="$PWD/result:/result" mikelangelo-project/capstan-pack
 ```
 That's it! When container is done working, following directories appear in `./result` directory:
 ```bash
-$ ls -l ./result
-total 16
-drwxrwxrwx 23 root root 4096 jun 15 11:44 intermediate
-drwxrwxrwx  2 root root 4096 jun 15 11:53 log
-drwxrwxrwx  3 root root 4096 jun 15 11:25 mike
-drwxrwxrwx  2 root root 4096 jun 15 11:44 packages
+$ tree -L 2 result
+result
+├── intermediate
+│   ├── erlang
+│   ├── mysql
+│   ├── node-4.4.5
+│   ├── ...
+├── log
+│   ├── erlang.log
+│   ├── mysql.log
+│   ├── node-4.4.5.log
+│   ├── ...
+├── mike
+│   └── osv-loader
+│       ├── index.yaml
+│       ├── osv-loader.qemu
+│       └── osv-loader.qemu.gz
+└── packages
+    ├── erlang.mpm
+    ├── erlang.yaml
+    ├── mysql.mpm
+    ├── mysql.yaml
+    ├── node-4.4.5.mpm
+    ├── node-4.4.5.yaml
+    ├── ...
 ```
 Where:
 
