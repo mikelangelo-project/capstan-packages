@@ -8,18 +8,23 @@ import re
 import glob
 from timeit import default_timer
 import sys
+import gzip
 
 OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
 RESULTS_DIR = '/result'
+RESULTS_PACKAGES_DIR = os.path.join(RESULTS_DIR, 'packages')
+RESULTS_LOADER_DIR = os.path.join(RESULTS_DIR, 'mike', 'osv-loader')
+RESULTS_INTERMEDIATE_DIR = os.path.join(RESULTS_DIR, 'intermediate')
 SHARE_OSV_DIR = False
 LOG_DIR = os.path.join(RESULTS_DIR, 'log')
 COMMON_DIR = '/common'
 
-# final osv-loader location e.g. /results/osv-loader.qemu
-result_osv_loader_file = os.path.join(RESULTS_DIR, 'osv-loader.qemu')
-# final osv-loader index location e.g. /results/index.yaml
-result_osv_loader_index_file = os.path.join(RESULTS_DIR, 'index.yaml')
+# final osv-loader location e.g. /result/mike/osv-loader/osv-loader.qemu
+result_osv_loader_file = os.path.join(RESULTS_LOADER_DIR, 'osv-loader.qemu')
+result_compressed_osv_loader_file = '%s.gz' % result_osv_loader_file
+# final osv-loader index location e.g. /result/mike/osv-loader/index.yaml
+result_osv_loader_index_file = os.path.join(RESULTS_LOADER_DIR, 'index.yaml')
 
 
 class Timer:
@@ -84,11 +89,11 @@ class Recipe:
         self.demo_run_yaml = os.path.join(self.demo_pkg_dir, 'meta', 'run.yaml')
 
         # where recipe results are e.g. /results/eu.mikelangelo-project.osv.bootstrap
-        self.result_dir = os.path.join(RESULTS_DIR, self.name)
-        # final .mpm location e.g. /results/eu.mikelangelo-project.osv.bootstrap.mpm
-        self.result_mpm_file = os.path.join(RESULTS_DIR, '%s.mpm' % self.name)
-        # final .yaml location e.g. /results/eu.mikelangelo-project.osv.bootstrap.yaml
-        self.result_yaml_file = os.path.join(RESULTS_DIR, '%s.yaml' % self.name)
+        self.result_dir = os.path.join(RESULTS_INTERMEDIATE_DIR, self.name)
+        # final .mpm location e.g. /results/packages/eu.mikelangelo-project.osv.bootstrap.mpm
+        self.result_mpm_file = os.path.join(RESULTS_PACKAGES_DIR, '%s.mpm' % self.name)
+        # final .yaml location e.g. /results/packages/eu.mikelangelo-project.osv.bootstrap.yaml
+        self.result_yaml_file = os.path.join(RESULTS_PACKAGES_DIR, '%s.yaml' % self.name)
         # intermediate .mpm location e.g. /results/eu.mikelangelo-project.osv.bootstrap/eu.mikelangelo-project.osv.bootstrap.mpm
         self.result_orig_mpm_file = os.path.join(self.result_dir, '%s.mpm' % self.name)
         # intermediate .yaml location e.g. /results/eu.mikelangelo-project.osv.bootstrap/meta/package.yaml
@@ -162,11 +167,25 @@ def prepare_osv_scripts():
             print('--- STDERR: ---\n%s' % error)
 
 
-def prepare_log_dir():
+def prepare_result_directories():
+    # /result/log
     if os.path.isdir(LOG_DIR):
         shutil.rmtree(LOG_DIR)
     os.makedirs(LOG_DIR)
     os.chmod(LOG_DIR, 0777)
+
+    if not os.path.isdir(RESULTS_PACKAGES_DIR):
+        os.makedirs(RESULTS_PACKAGES_DIR)
+    os.chmod(RESULTS_PACKAGES_DIR, 0777)
+
+    if not os.path.isdir(RESULTS_LOADER_DIR):
+        os.makedirs(RESULTS_LOADER_DIR)
+    os.chmod(os.path.join(RESULTS_LOADER_DIR, '..'), 0777)
+    os.chmod(RESULTS_LOADER_DIR, 0777)
+
+    if not os.path.isdir(RESULTS_INTERMEDIATE_DIR):
+        os.makedirs(RESULTS_INTERMEDIATE_DIR)
+    os.chmod(RESULTS_INTERMEDIATE_DIR, 0777)
 
 
 def clear_result_dir():
@@ -190,7 +209,7 @@ def clear_result_dir_specific(recipes):
     clear_result_dir_specific() deletes delievered results of selected recipes.
     """
     if recipes:
-        _print_ok('Clearing mpm files from ./result directory (for packages that we\'re about to rebuild just now)')
+        _print_warn('Clearing mpm files from ./result directory (for packages that we\'re about to rebuild just now)')
         print('Previous results for those packages will be discarded.')
         confirm_or_exit()
 
@@ -211,6 +230,10 @@ def provide_loader_image():
     print('Copy loader.img')
     shutil.copy2(os.path.join(OSV_DIR, 'build', 'last', 'loader.img'), result_osv_loader_file)
 
+    print('Compress loader image')
+    with open(result_osv_loader_file, 'rb') as f1, gzip.open(result_compressed_osv_loader_file, 'wb') as f2:
+        f2.writelines(f1)
+
     print('Create index.yaml')
     s = '''
         format_version: "1"
@@ -225,6 +248,7 @@ def provide_loader_image():
 
     print('Set permissions to 0777')
     os.chmod(result_osv_loader_file, 0777)
+    os.chmod(result_compressed_osv_loader_file, 0777)
     os.chmod(result_osv_loader_index_file, 0777)
 
 
@@ -544,7 +568,7 @@ def confirm_or_exit():
 if __name__ == '__main__':
     override_global_variables()
     prepare_osv_scripts()
-    prepare_log_dir()
+    prepare_result_directories()
     recipes = select_recipes(os.environ.get('RECIPES'))
     print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
 

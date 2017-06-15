@@ -17,16 +17,30 @@ Once having it on your machine, you can run it with:
 $ mkdir ./result
 $ docker run -it --volume="$PWD/result:/result" mikelangelo-project/capstan-packages
 ```
-That's it! When container is done working result appears in `./result` directory:
+That's it! When container is done working, following directories appear in `./result` directory:
 ```bash
 $ ls -l ./result
-total 7412
-drwxrwxrwx 9 root root    4096 jun  1 13:30 eu.mikelangelo-project.osv.bootstrap
--rwxrwxrwx 1 root root 1284804 jun  1 13:30 eu.mikelangelo-project.osv.bootstrap.mpm
--rwxrwxrwx 1 root root     137 jun  1 13:30 eu.mikelangelo-project.osv.bootstrap.yaml
--rwxrwxrwx 1 root root     134 jun  1 13:30 index.yaml
--rwxrwxrwx 1 root root 6291456 maj 31 14:21 osv-loader.qemu
+total 16
+drwxrwxrwx 23 root root 4096 jun 15 11:44 intermediate
+drwxrwxrwx  2 root root 4096 jun 15 11:53 log
+drwxrwxrwx  3 root root 4096 jun 15 11:25 mike
+drwxrwxrwx  2 root root 4096 jun 15 11:44 packages
 ```
+Where:
+
+* `intermediate` directory contains uncompressed packages. As the name suggests, these are not final
+results, but come handy if you need to peek in package content.
+* `log` directory contains one file per package that was built e.g. `log/osv.cli.log`. Content of this
+file is nothing but redirected `stdout` and `stdin` of the recipe's `build.sh` script. In other
+words, when building recipe fails, this is where you find answers about what went wrong.
+* `mike` directory contains compiled OSv kernel that is packaged into a small qemu image. Copy this
+whole directory into your `$CAPSTAN_ROOOT/repository` and Capstan will be able to compose images
+that base on `mike/osv-loader`.
+* `packages` directory contains result of container execution - the Capstan packages. There are two
+files for each package: `<package-name>.mpm` and `<package-name>.yaml`. The former contains actual
+package files (that are in .tar.gz format, in case you were wondering) while the latter contains
+package metadata. Copy this whole directory into your `$CAPSTAN_ROOOT` and Capstan will be able to
+compose images that require these packages.
 
 ## Running container
 When `mikelangelo-project/capstan-packages` container is run it builds and tests **all** recipes by
