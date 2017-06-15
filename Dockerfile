@@ -55,6 +55,16 @@ RUN make -C modules/httpserver
 RUN make -C mike-apps/OpenFOAM
 
 #
+# Develop (refactor later)
+#
+RUN apt-get update -y
+RUN apt-get install -y ed
+RUN cd /go/src/github.com/mikelangelo-project/capstan && \
+    git pull && \
+    go install
+
+
+#
 # OBTAIN RECIPES AND RUN
 #
 
