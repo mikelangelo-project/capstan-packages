@@ -9,6 +9,7 @@ import glob
 from timeit import default_timer
 import sys
 import gzip
+from distutils.dir_util import copy_tree
 
 OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
@@ -414,11 +415,7 @@ def prepare_test_capstan_root():
     print('Copying all mpms and yamls into CAPSTAN_ROOT')
     repo_packages_dir = os.path.join(capstan_root, 'packages')
     os.mkdir(repo_packages_dir)
-    mpms = list(glob.iglob(os.path.join(RESULTS_DIR, "*.mpm")))
-    yamls = list(glob.iglob(os.path.join(RESULTS_DIR, "*.yaml")))
-    for file in mpms + yamls:
-        shutil.copy2(file, repo_packages_dir)
-    print('Number of mpms copied: %d' % len(mpms))
+    copy_tree(RESULTS_PACKAGES_DIR, repo_packages_dir)
 
     print('Copying mike/osv-loader into CAPSTAN_ROOT')
     repo_osv_loader_dir = os.path.join(capstan_root, 'repository', 'mike', 'osv-loader')
