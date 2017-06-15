@@ -7,6 +7,7 @@ import tempfile
 import re
 import glob
 from timeit import default_timer
+import sys
 
 OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
@@ -172,7 +173,9 @@ def clear_result_dir():
     """
     clear_result_dir() deletes whatever is currently in RESULTS_DIR.
     """
-    _print_ok('Clearing result directory %s' % RESULTS_DIR)
+    _print_warn('Clearing everything from ./result directory')
+    print('All previous results will be discarded.')
+    confirm_or_exit()
 
     for name in os.listdir(RESULTS_DIR):
         path = os.path.join(RESULTS_DIR, name)
@@ -186,7 +189,10 @@ def clear_result_dir_specific(recipes):
     """
     clear_result_dir_specific() deletes delievered results of selected recipes.
     """
-    _print_ok('Clearing specific packages from result directory %s' % RESULTS_DIR)
+    if recipes:
+        _print_ok('Clearing mpm files from ./result directory (for packages that we\'re about to rebuild just now)')
+        print('Previous results for those packages will be discarded.')
+        confirm_or_exit()
 
     for recipe in recipes:
         shutil.rmtree(recipe.result_dir, ignore_errors=True)
@@ -526,6 +532,15 @@ def env_bool(name, default='no'):
     return os.environ.get(name, default).lower() in ['y', 'yes', 'true', '1']
 
 
+def confirm_or_exit():
+    while True:
+        s = raw_input('Continue? [y/n]')
+        if s in ['y', 'Y', 'yes', 'YES']:
+            return
+        elif s in ['n', 'N', 'no', 'NO']:
+            sys.exit()
+
+
 if __name__ == '__main__':
     override_global_variables()
     prepare_osv_scripts()
@@ -541,7 +556,7 @@ if __name__ == '__main__':
     if env_bool('SKIP_TESTS'):
         _print_warn('Skipping all tests since SKIP_TESTS environment variable is set')
     else:
-        recipes = select_recipes(os.environ.get('TEST_RECIPES'))
+        recipes = select_recipes(os.environ.get('TEST_RECIPES') or os.environ.get('RECIPES'))
         test_recipe_list(recipes)
 
     TIMER.report_global()
