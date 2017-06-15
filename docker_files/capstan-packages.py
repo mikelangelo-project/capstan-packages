@@ -5,11 +5,11 @@ import os
 import shutil
 import tempfile
 import re
-import glob
 from timeit import default_timer
 import sys
 import gzip
 from distutils.dir_util import copy_tree
+import multiprocessing
 
 OSV_DIR = '/git-repos/osv'
 RECIPES_DIR = '/recipes'
@@ -326,6 +326,7 @@ def build_recipe(recipe):
                 'HOME': '/root',
 
                 'COMMON_DIR': COMMON_DIR,
+                'CPU_COUNT': '%d' % multiprocessing.cpu_count(),
             },
             stdout=f,
             stderr=f,

@@ -13,7 +13,7 @@ echo "Exporting Node ${NODE_VERSION}"
 
 cd ${OSV_DIR}/apps/node
 ./GET ${NODE_VERSION}
-make NODE_VERSION=${NODE_VERSION}
+make NODE_VERSION=${NODE_VERSION} -j ${CPU_COUNT}
 
 cd ${PACKAGE_RESULT_DIR}
 mkdir ./bin
