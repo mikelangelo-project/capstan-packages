@@ -1,0 +1,6 @@
+Usage: node [options] [ -e script | script.js ] [arguments]
+       node debug script.js [arguments]
+
+Options:
+  -v, --version         print Node.js version
+  -e, --eval script     evaluate script
