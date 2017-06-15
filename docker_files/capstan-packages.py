@@ -364,8 +364,9 @@ def build_and_provide_recipe_list(recipes):
     are located in RESULTS_DIR.
     :param recipes: list of Recipe instances
     """
-    for recipe in recipes:
+    for idx, recipe in enumerate(recipes):
         TIMER.start()
+        print('#%02d/%02d' % (idx + 1, len(recipes)))
         if build_recipe(recipe):
             provide_mpm_for_recipe(recipe)
         TIMER.report('build recipe')
@@ -487,9 +488,10 @@ def test_recipe_list(recipes):
     _print_ok('Testing recipes')
 
     failed_recipes = []
-    for recipe in recipes:
+    for idx, recipe in enumerate(recipes):
         if recipe.has_demo_package:
             TIMER.start()
+            print('#%02d/%02d' % (idx + 1, len(recipes)))
             if test_recipe(recipe):
                 print('Test for %s passed.' % recipe.name)
             else:
