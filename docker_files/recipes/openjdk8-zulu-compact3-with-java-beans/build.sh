@@ -15,7 +15,7 @@ echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
 echo "Exporting OpenJDK 8 Zulu Compact3 With Java Beans"
 
 cd ${OSV_DIR}
-${OSV_DIR}/scripts/build image=openjdk8-zulu-compact3-with-java-beans
+${OSV_DIR}/scripts/build image=openjdk8-zulu-compact3-with-java-beans -j ${CPU_COUNT}
 
 cd ${OSV_BUILD_DIR}
 ${OSV_DIR}/scripts/upload_manifest.py -m usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}

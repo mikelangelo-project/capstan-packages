@@ -13,7 +13,7 @@ cd ${OSV_DIR}
 patch -p1 < ${RECIPE_DIR}/openfoam-core.patch
 patch -p1 < ${COMMON_DIR}/openfoam_remove_ompi.patch
 
-${OSV_DIR}/scripts/build image=OpenFOAM
+${OSV_DIR}/scripts/build image=OpenFOAM -j ${CPU_COUNT}
 
 cd ${OSV_BUILD_DIR}
 ${OSV_DIR}/scripts/upload_manifest.py -m usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}

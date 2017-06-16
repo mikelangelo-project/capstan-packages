@@ -12,7 +12,7 @@ echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
 cd ${OSV_DIR}
 patch -p1 < ${COMMON_DIR}/openfoam_remove_ompi.patch
 
-${OSV_DIR}/scripts/build image=OpenFOAM
+${OSV_DIR}/scripts/build image=OpenFOAM -j ${CPU_COUNT}
 
 cd ${OSV_BUILD_DIR}
 echo "/usr/bin/rhoPorousSimpleFoam.so: ${OSV_DIR}/mike-apps/OpenFOAM/ROOTFS/usr/bin/rhoPorousSimpleFoam.so" > usr.manifest

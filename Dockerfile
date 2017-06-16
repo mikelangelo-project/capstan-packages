@@ -50,9 +50,9 @@ RUN go get github.com/mikelangelo-project/capstan && \
 # PRECOMPILE
 #
 
-RUN make -C modules/libtools
-RUN make -C modules/httpserver
-RUN make -C mike-apps/OpenFOAM
+RUN make -C modules/libtools -j 6
+RUN make -C modules/httpserver -j 6
+RUN make -C mike-apps/OpenFOAM -j 6
 
 #
 # Develop (refactor later)

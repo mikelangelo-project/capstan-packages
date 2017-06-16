@@ -14,7 +14,7 @@ echo "Exporting MySQL"
 useradd -ms /bin/bash mysql
 
 cd ${OSV_DIR}
-${OSV_DIR}/scripts/build image=mysql
+${OSV_DIR}/scripts/build image=mysql -j ${CPU_COUNT}
 
 cd ${OSV_BUILD_DIR}
 ${OSV_DIR}/scripts/upload_manifest.py -m usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}

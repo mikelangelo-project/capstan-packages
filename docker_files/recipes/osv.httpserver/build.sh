@@ -15,7 +15,7 @@ echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
 echo "Exporting HTTP server"
 
 cd ${OSV_DIR}
-${OSV_DIR}/scripts/build image=httpserver
+${OSV_DIR}/scripts/build image=httpserver -j ${CPU_COUNT}
 
 cd ${OSV_BUILD_DIR}
 ${OSV_DIR}/scripts/upload_manifest.py -m ${OSV_BUILD_DIR}/usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}
