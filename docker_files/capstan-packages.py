@@ -12,7 +12,8 @@ from distutils.dir_util import copy_tree
 import multiprocessing
 
 OSV_DIR = '/git-repos/osv'
-RECIPES_DIR = '/recipes'
+INTERNAL_RECIPES_DIR = '/recipes'
+RECIPES_DIRS = [INTERNAL_RECIPES_DIR, '/user_recipes']
 RESULTS_DIR = '/result'
 RESULTS_PACKAGES_DIR = os.path.join(RESULTS_DIR, 'packages')
 RESULTS_LOADER_DIR = os.path.join(RESULTS_DIR, 'mike', 'osv-loader')
@@ -71,6 +72,8 @@ def _print_warn(txt):
 
 class Recipe:
     def __init__(self, root, name):
+        # package root i.e. parent directory of package directory
+        self.root = root
         # package name e.g. eu.mikelangelo-project.osv.bootstrap
         self.name = name
         # where recipe is e.g. /recipes/eu.mikelangelo-project.osv.bootstrap
@@ -110,6 +113,9 @@ class Recipe:
         # where does this recipe write stdout/stderr of build.sh to
         self.log_name = '%s.log' % self.name
         self.log_file = os.path.join(LOG_DIR, self.log_name)
+
+    def name_with_dir(self):
+        return self.name if self.root == INTERNAL_RECIPES_DIR else '(%s) %s' % (self.root, self.name)
 
 
 def prepare_osv_scripts():
@@ -257,9 +263,11 @@ def available_recipes(root):
     """
     list_recipes() searches for folders in given direcotry and instantiates Recipe object for each. 
     :param root: directory where recipes folders are in
-    :return: set of recipe names
+    :return: list of recipes that are within given root
     """
-    return set([name for name in os.listdir(root) if os.path.isdir(os.path.join(root, name))])
+    if not os.path.isdir(root):
+        return []
+    return [Recipe(root, name) for name in os.listdir(root) if os.path.isdir(os.path.join(root, name))]
 
 
 def select_recipes(filter_names):
@@ -274,16 +282,30 @@ def select_recipes(filter_names):
         print('Returning empty recipe list')
         return []
 
-    all_recipe_names = available_recipes(RECIPES_DIR)
+    filter = None
     if filter_names:
         print('Filtering recipes based on environment variable')
-        filter_names = set([name for name in filter_names.split(',')])
+        filter = set([name for name in filter_names.split(',')])
 
-        if not filter_names.issubset(all_recipe_names):
-            raise RuntimeError('environment variable RECIPES contains invalid recipes: %s' %
-                               list(filter_names.difference(all_recipe_names)))
-        return [Recipe(RECIPES_DIR, name) for name in filter_names]
-    return [Recipe(RECIPES_DIR, name) for name in all_recipe_names]
+    recipes = []
+    recipe_names = set()
+    for root in RECIPES_DIRS:
+        recipes_in_dir = available_recipes(root)
+        for recipe in recipes_in_dir:
+            if recipe.name in recipe_names:
+                _print_err('Duplicate result found: %s (root = %s)' % (recipe.name, root))
+                sys.exit()
+            if filter and recipe.name not in filter:
+                continue
+
+            recipes.append(recipe)
+            recipe_names.add(recipe.name)
+
+    if filter is not None and len(recipes) != len(filter):
+        _print_err('Invalid recipe name provided: %s' % [el for el in filter if el not in set([r.name for r in recipes])])
+        sys.exit()
+
+    return recipes
 
 
 def build_recipe(recipe):
@@ -568,7 +590,7 @@ if __name__ == '__main__':
     prepare_osv_scripts()
     prepare_result_directories()
     recipes = select_recipes(os.environ.get('RECIPES'))
-    print('Recipes are:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
+    print('Recipes are:\n%s' % '\n'.join(['- ' + r.name_with_dir() for r in recipes]))
 
     clear_result_dir_specific(recipes) if env_bool('KEEP_RECIPES', 'yes') else clear_result_dir()
     provide_loader_image()
