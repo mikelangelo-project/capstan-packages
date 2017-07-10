@@ -346,6 +346,7 @@ def build_recipe(recipe):
                 'MISCBASE': os.path.join(recipe.osv_dir, 'external', 'x64', 'misc.bin'),
                 'PATH': os.environ.get('PATH'),
                 'HOME': '/root',
+                'JAVA_HOME': '/usr/lib/jvm/java-8-oracle',
 
                 'COMMON_DIR': COMMON_DIR,
                 'CPU_COUNT': '%d' % multiprocessing.cpu_count(),
