@@ -1,12 +1,12 @@
 # Capstan Packages
-This repository contains Dockerfile for `mikelangelo-project/capstan-packages` Docker container that
+This repository contains Dockerfile for `mikelangelo/capstan-packages` Docker container that
 recompiles `mike/osv-loader` base image and all the Capstan packages (that are maintained by
 MIKELANGELO project) from scratch.
 
 ## Quick usage
 Fastest way is to pull container from DockerHub:
 ```bash
-$ docker pull mikelangelo-project/capstan-packages
+$ docker pull mikelangelo/capstan-packages
 ```
 *NOTE: At this time `mikelangelo-project/capstan-packages` is not uploaded to DockerHub yet due to active
 development. Instead you have to build it on your own (see section below). Building Docker container
@@ -15,7 +15,7 @@ is a very simple task, but you have to wait quite some time.*
 Once having it on your machine, you can run it with:
 ```bash
 $ mkdir ./result
-$ docker run -it --volume="$PWD/result:/result" mikelangelo-project/capstan-packages
+$ docker run -it --volume="$PWD/result:/result" mikelangelo/capstan-packages
 ```
 That's it! When container is done working, following directories appear in `./result` directory:
 ```bash
@@ -62,28 +62,39 @@ package metadata. Copy this whole directory into your `$CAPSTAN_ROOOT` and Capst
 compose images that require these packages.
 
 ## Running container
-When `mikelangelo-project/capstan-packages` container is run it builds and tests **all** recipes by
+When `mikelangelo/capstan-packages` container is run it builds and tests **all** recipes by
 default:
 ```bash
-$ docker run -it --volume="$PWD/result:/result" mikelangelo-project/capstan-packages
+$ docker run -it --volume="$PWD/result:/result" mikelangelo/capstan-packages
 ```
 You can, however, customize container behavior by setting following environment variables:
 
 | ENV | EXAMPLE VALUE | EFFECT |
 |-----|---------------|--------|
-| `RECIPES` |  eu.mikelangelo-project.osv.nfs | builds only recipes listed (comma-separated), `[]` means empty list (don't use brackets for non-empty list) |
+| `RECIPES` |  osv.nfs | builds only recipes listed (comma-separated), `[]` means empty list (don't use brackets for non-empty list) |
 | `SKIP_TESTS` |  no | do not run tests after building (tests are run by default) |
 | `SHARE_OSV_DIR` | yes | should each recipe get its own copy of osv src dir (yes by default) |
-| `TEST_RECIPES` | eu.mikelangelo-project.osv.nfs | test only recipes listed (comma-separated) |
+| `TEST_RECIPES` | osv.nfs | test only recipes listed (comma-separated) |
 | `KEEP_RECIPES` | yes | keep packages that are already in /result dir when mounted (yes by default) |
 
-To build only `nfs` package, for example, you can use following command:
+To build only `osv.nfs` package, for example, you can use following command:
 ```bash
-$ docker run -it --volume="$PWD/result:/result" --env RECIPES=eu.mikelangelo-project.osv.nfs mikelangelo-project/capstan-packages
+$ docker run -it --volume="$PWD/result:/result" --env RECIPES=osv.nfs mikelangelo/capstan-packages
+```
+
+### Using local recipes
+The container image contains all recipes from this repository (located in `docker_files/recipes`
+directory). To use your own recipe, you can either add it into the `docker_files/recipes` and
+rebuild the whole container or you can attach local directory containing your own recipes into
+container's `/user_recipes` directory using `--volume` argument.
+
+For example, to make directory `/home/user/my_recipes` recognizable by the container, run it with
+```bash
+docker run --volume="/home/user/my_recipes:/user_recipes" ...
 ```
 
 ## Building container
-This section describes how to build `mikelangelo-project/capstan-packages` from scratch. Result will
+This section describes how to build `mikelangelo/capstan-packages` from scratch. Result will
 be Docker image in your local Docker repository.
 
 Go ahead, clone our repository:
@@ -93,7 +104,7 @@ $ git clone git@github.com:mikelangelo-project/capstan-packages.git
 To build the container execute:
 ```bash
 $ cd capstan-packages
-$ docker build -t mikelangelo-project/capstan-packages .
+$ docker build -t mikelangelo/capstan-packages .
 ```
 Building will take somewhat 10 minutes since it does many things:
 
@@ -105,8 +116,8 @@ Building will take somewhat 10 minutes since it does many things:
 
 When building completes, you can verify that the Docker image is in your repository:
 ```bash
-$ docker images | grep mikelangelo-project/capstan-packages
-mikelangelo-project/capstan-packages   latest   bee017f1e55c   16 hours ago   2.82 GB
+$ docker images | grep mikelangelo/capstan-packages
+mikelangelo/capstan-packages   latest   bee017f1e55c   16 hours ago   2.82 GB
 ```
 
 ## More Documentation
