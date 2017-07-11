@@ -1,0 +1,14 @@
+Usage: Worker [options] <master>
+
+Master must be a URL of the form spark://hostname:port
+
+Options:
+  -c CORES, --cores CORES  Number of cores to use
+  -m MEM, --memory MEM     Amount of memory to use (e.g. 1000M, 2G)
+  -d DIR, --work-dir DIR   Directory to run apps in (default: SPARK_HOME/work)
+  -i HOST, --ip IP         Hostname to listen on (deprecated, please use --host or -h)
+  -h HOST, --host HOST     Hostname to listen on
+  -p PORT, --port PORT     Port to listen on (default: random)
+  --webui-port PORT        Port for web UI (default: 8081)
+  --properties-file FILE   Path to a custom Spark properties file.
+                           Default is conf/spark-defaults.conf.

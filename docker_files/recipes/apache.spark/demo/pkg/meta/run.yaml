@@ -1,0 +1,6 @@
+runtime: native
+
+config_set:
+  default:
+    bootcmd: /java.so -Xms512m -Xmx512m -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.worker.Worker --help
+config_set_default: default
