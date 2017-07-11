@@ -51,8 +51,8 @@ cat >meta/run.yaml <<EOL
 runtime: native
 config_set:
   master:
-    bootcmd: /java.so -Xms512m -Xmx512m -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.worker.Worker 172.16.122.4:7077
+    bootcmd: /java.so -Xms512m -Xmx512m -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.master.Master --host 0.0.0.0 --port 7077 --webui-port 8080
   worker:
-    bootcmd: /java.so -Xms512m -Xmx512m -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.worker.Worker 172.16.122.4:7077
+    bootcmd: --env=MASTER?=localhost:7077 /java.so -Xms512m -Xmx512m -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.worker.Worker $MASTER
 config_set_default: worker
 EOL
