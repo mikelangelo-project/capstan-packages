@@ -1,1 +1,0 @@
-Failed looking up main. Powering off.
