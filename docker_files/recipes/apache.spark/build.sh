@@ -47,7 +47,7 @@ capstan package init --name "${PACKAGE_NAME}" \
     --version 0.1 \
     --require openjdk8-zulu-compact3-with-java-beans
 
-cat >meta/run.yaml <<EOL
+cat >meta/run.yaml <<'EOL'
 runtime: native
 config_set:
   master:
@@ -56,3 +56,5 @@ config_set:
     bootcmd: --env=MASTER?=localhost:7077 /java.so -Xms512m -Xmx512m -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.worker.Worker $MASTER
 config_set_default: worker
 EOL
+
+cp ${RECIPE_DIR}/README.md ${PACKAGE_RESULT_DIR}/meta/
