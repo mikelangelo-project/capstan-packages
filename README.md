@@ -8,7 +8,7 @@ Fastest way is to pull container from DockerHub:
 ```bash
 $ docker pull mikelangelo/capstan-packages
 ```
-*NOTE: At this time `mikelangelo-project/capstan-packages` is not uploaded to DockerHub yet due to active
+*NOTE: At this time `mikelangelo/capstan-packages` is not uploaded to DockerHub yet due to active
 development. Instead you have to build it on your own (see section below). Building Docker container
 is a very simple task, but you have to wait quite some time.*
 
@@ -122,3 +122,5 @@ mikelangelo/capstan-packages   latest   bee017f1e55c   16 hours ago   2.82 GB
 
 ## More Documentation
 * [Adding New Recipe](doc/recipes.md)
+* [Pushing image to DockerHub](doc/dockerhub.md)
+
