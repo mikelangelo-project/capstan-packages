@@ -1,0 +1,5 @@
+runtime: native
+config_set:
+  cli:
+    bootcmd: /cli/cli.so
+config_set_default: cli
