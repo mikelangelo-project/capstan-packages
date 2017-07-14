@@ -361,6 +361,14 @@ def build_recipe(recipe):
         print('Please see log files inside %s directory' % LOG_DIR)
         return False
 
+    print('Copying all files from RECIPE/meta into package meta directory')
+    meta_dir_recipe = os.path.join(recipe.dir, 'meta')
+    meta_dir_result = os.path.join(recipe.result_dir, 'meta')
+    if os.path.isdir(meta_dir_recipe):
+        if not os.path.isdir(meta_dir_result):
+            os.makedirs(meta_dir_result)
+        copy_tree(meta_dir_recipe, meta_dir_result)
+
     print('Verifying that result contains meta/package.yaml')
     if not os.path.isfile(recipe.result_orig_yaml_file):
         _print_err('build.sh script did not create meta/package.yaml file')
