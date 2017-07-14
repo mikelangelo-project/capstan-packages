@@ -1,0 +1,11 @@
+runtime: native
+config_set:
+  mount-nfs:
+    bootcmd: /tools/mount-nfs.so nfs://$NFS_ENDPOINT $NFS_MOUNT
+    env:
+      NFS_ENDPOINT: 192.168.122.1/mydir/?uid=0
+      NFS_MOUNT: /mydir
+  unmount-nfs:
+    bootcmd: /tools/unmount.so $NFS_MOUNT
+    env:
+      NFS_MOUNT: /mydir

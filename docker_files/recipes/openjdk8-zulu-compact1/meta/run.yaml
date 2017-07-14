@@ -1,0 +1,11 @@
+runtime: native
+config_set:
+  java:
+    bootcmd: /java.so -Xms$XMS -Xmx$XMX -cp $CLASSPATH $JVM_ARGS $MAIN $ARGS
+    env:
+      XMS: 512m
+      XMX: 512m
+      CLASSPATH: /
+      JVM_ARGS: -Duser.dir=/
+      MAIN: main.Hello
+      ARGS:
