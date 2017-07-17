@@ -1,0 +1,9 @@
+runtime: native
+
+config_set:
+  mysql:
+    bootcmd: /usr/bin/mysqld --datadir=/usr/data --user=root --init-file=$INIT_FILE $ARGS
+    env:
+      INIT_FILE: /etc/mysql-init.sql
+      ARGS:
+config_set_default: mysql

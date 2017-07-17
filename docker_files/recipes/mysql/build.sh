@@ -28,6 +28,6 @@ capstan package init --name "${PACKAGE_NAME}" \
 echo "Include additional files in MPM"
 cd ${PACKAGE_RESULT_DIR}
 cp ${RECIPE_DIR}/mysql-init.sql ./etc/mysql-init.sql
-cp ${RECIPE_DIR}/run.yaml ./meta/run.yaml
+tar -xvzf ${RECIPE_DIR}/data.tar.gz -C ./usr/data
 
 echo "Done"
