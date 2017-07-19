@@ -1,0 +1,9 @@
+runtime: native
+config_set:
+  simpleFoam:
+    bootcmd: /usr/bin/simpleFoam.so -case $FOAM_CASE_DIR $FOAM_ARGS
+    env:
+      WM_PROJECT_DIR: /openfoam
+      FOAM_CASE_DIR: /case
+      FOAM_ARGS:
+config_set_default: simpleFoam
