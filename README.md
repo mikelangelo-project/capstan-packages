@@ -6,11 +6,12 @@ MIKELANGELO project) from scratch.
 ## Quick usage
 Fastest way is to pull container from DockerHub:
 ```bash
-$ docker pull mikelangelo/capstan-packages
+$ docker pull mikelangelo/capstan-packages:2017-07-12_c601abb
 ```
-*NOTE: At this time `mikelangelo/capstan-packages` is not uploaded to DockerHub yet due to active
-development. Instead you have to build it on your own (see section below). Building Docker container
-is a very simple task, but you have to wait quite some time.*
+*NOTE: container tag is composed like this: `<compile-date>_<osv-commit>`. So you can know what OSv
+commit you have in the container. Navigate to
+[mikelangelo dockerhub repo](https://hub.docker.com/r/mikelangelo/capstan-packages/tags/)
+to see available tags*
 
 Once having it on your machine, you can run it with:
 ```bash
