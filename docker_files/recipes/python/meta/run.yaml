@@ -1,0 +1,9 @@
+runtime: native
+config_set:
+  python:
+    bootcmd: /python $ARGS
+    env:
+      PYTHONHOME: /pyenv
+      ARGS:
+
+config_set_default: python

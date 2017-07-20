@@ -1,0 +1,9 @@
+runtime: native
+
+config_set:
+  default:
+    bootcmd: /python demo.py
+    env:
+      PYTHONHOME: /pyenv
+
+config_set_default: default
