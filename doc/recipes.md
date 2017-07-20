@@ -10,17 +10,20 @@ recipes
   |- eu.mikelangelo-project.osv.nfs  # <--- recipe
       |- build.sh
       |- demo     # <--- optional recipe test
-          |- pkg  # <--- directory containing demo package that requires the package that recipe is for
-          |   |- meta
-          |      |- package.yaml.templ
-          |      |- run.yaml
-          |- expected-stdout.txt  # <--- when demo package is run we expect following text in console
+      |   |- pkg  # <--- directory containing demo package that requires the package that recipe is for
+      |   |   |- meta
+      |   |      |- package.yaml.templ
+      |   |      |- run.yaml
+      |   |- expected-stdout.txt  # <--- when demo package is run we expect following text in console
+      |- meta     # <--- content of this directory is copied as-it-is into package's meta/ directory
+          |- README.md
+          |- run.yaml
 ```
 
 ### Writing `build.sh` script
 The `build.sh` script is responsible for providing all the content of the package, including
-`meta/package.yaml` and optionally `meta/run.yaml`. Building is assumed successful when script exits
-with 0 status code or failed when any other exit code is returned.
+`meta/package.yaml`. Building is assumed successful when script exits with 0 status code or failed
+when any other exit code is returned.
 
 Container's main process (implemented in [capstan-packages.py](../docker_files/capstan-packages.py))
 runs the `build.sh` script from within the recipe directory and provides following environment
@@ -28,14 +31,18 @@ variables to it:
 
 | ENV | EXAMPLE VALUE | DESCRIPTION |
 |-----|---------------|-------------|
-| `RECIPE_DIR` | /recipes/eu.mikelangelo-project.osv.nfs | recipe directory |
-| `PACKAGE_RESULT_DIR` | /results/eu.mikelangelo-project.osv.nfs | directory where build result must appear |
-| `PACKAGE_NAME` | eu.mikelangelo-project.osv.nfs | same as directory name of recipe |
+| `COMMON_DIR` | /common | directory with files that are common to all patches |
+| `CPU_COUNT` | 6 | number of CPUs available to container |
+| `GCCBASE` | /git-repos/osv/external/x64/gcc.bin | path to gcc base |
+| `HOME` | /root | $HOME |
+| `JAVA_HOME` | /usr/lib/jvm/java-8-oracle | $JAVA_HOME |
+| `MISCBASE` | /git-repos/osv/external/x64/misc.bin | path to misc base |
 | `OSV_DIR` | /git-repos/osv | directory where OSv source code is |
 | `OSV_BUILD_DIR` | /git-repos/osv/build/release.x64 | OSv build directory
-| `GCCBASE` | /git-repos/osv/external/x64/gcc.bin | path to gcc base |
-| `MISCBASE` | /git-repos/osv/external/x64/misc.bin | path to misc base |
+| `PACKAGE_NAME` | osv.nfs | same as directory name of recipe |
+| `PACKAGE_RESULT_DIR` | /results/osv.nfs | directory where build result must appear |
 | `PATH` | ... | copy of PATH of main process |
+| `RECIPE_DIR` | /recipes/osv.nfs | recipe directory |
 
 Following statements are true:
 
@@ -50,6 +57,17 @@ discarded.
 When implementing a `build.sh` script bear in mind that in the end the `$PACKAGE_RESULT_DIR` will be
 compressed into MPM package using `capstan package build` command.
 
+### Providing `meta/run.yaml` and `README.md` for recipe
+Generally, your `build.sh` script is supposed to provide all the content of the package. But there is
+a shortcut available for package's meta/ directory which can be described as follows: if your recipe
+contains `meta/` directory, then all its content is copied into package's `meta/` directory right after
+the `build.sh` script has finished its work.
+
+The shortcut is convenient to be used when providing meta/run.yaml and README.md for your package.
+It can also be used to provide meta/package.yaml, but it is advised that we provide that one from
+within build.sh script in order to be able to make use of `${PACKAGE_NAME}` variable for package name.
+
+
 ### Providing test for recipe
 When a new MPM is built out of recipe we cannot be sure that it behaves well. At the very least we
 should compose a unikernel that requires the new MPM and check if it boots properly. Directory `demo`
@@ -59,5 +77,25 @@ run by the main process. Decision whether demo was a success or a failure is don
 fails.
 
 Examine exisitng tests to see it in action.
+
+## Debugging
+When container gets stopped, all the temporary results are discarded. Only content of `/result` directory
+is persisted on host if it was mounted when the container was run. Therefore container is never stopped
+automatically - it waits for you to press CTRL + C to stop it.
+
+While container is running, you can connect to it to manually experiment inside it. First query
+container ID:
+```bash
+$ docker ps
+CONTAINER ID        IMAGE                          COMMAND                  CREATED
+f510a69c74e3        mikelangelo/capstan-packages   "/bin/sh -c 'pytho..."   13 seconds ago
+```
+and then connect:
+```bash
+$ docker exec -it f510a69c74e3 /bin/bash
+root@f510a69c74e3:/git-repos/osv#
+```
+There you go, experiment however you want. Bear in mind that everything will be discarded when the
+container is stopped.
 
 

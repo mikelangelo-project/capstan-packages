@@ -15,8 +15,11 @@ is a very simple task, but you have to wait quite some time.*
 Once having it on your machine, you can run it with:
 ```bash
 $ mkdir ./result
-$ docker run -it --volume="$PWD/result:/result" mikelangelo/capstan-packages
+$ docker run -it --privileged --volume="$PWD/result:/result" mikelangelo/capstan-packages
 ```
+*NOTE: the `--privileged` flag is needed in order to enable KVM inside container. Container will
+still work without the flag, but recipe tests will last longer.*
+
 That's it! When container is done working, following directories appear in `./result` directory:
 ```bash
 $ tree -L 2 result
@@ -65,7 +68,7 @@ compose images that require these packages.
 When `mikelangelo/capstan-packages` container is run it builds and tests **all** recipes by
 default:
 ```bash
-$ docker run -it --volume="$PWD/result:/result" mikelangelo/capstan-packages
+$ docker run -it --privileged --volume="$PWD/result:/result" mikelangelo/capstan-packages
 ```
 You can, however, customize container behavior by setting following environment variables:
 
@@ -79,7 +82,7 @@ You can, however, customize container behavior by setting following environment 
 
 To build only `osv.nfs` package, for example, you can use following command:
 ```bash
-$ docker run -it --volume="$PWD/result:/result" --env RECIPES=osv.nfs mikelangelo/capstan-packages
+$ docker run -it --privileged --volume="$PWD/result:/result" --env RECIPES=osv.nfs mikelangelo/capstan-packages
 ```
 
 ### Using local recipes
