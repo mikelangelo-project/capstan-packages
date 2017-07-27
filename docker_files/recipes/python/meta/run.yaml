@@ -4,6 +4,6 @@ config_set:
     bootcmd: /python $ARGS
     env:
       PYTHONHOME: /pyenv
-      ARGS:
+      ARGS: "-"
 
 config_set_default: python

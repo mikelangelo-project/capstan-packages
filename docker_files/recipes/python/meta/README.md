@@ -11,6 +11,10 @@ unikernel and then run it using
 ```
 $ capstan run demo --boot python --env ARGS=script.py
 ```
+| ENV        |  MAPS TO     | DEFAULT VALUE  | EFFECT
+|------------|--------------|----------------|--------
+| ARGS       | arg          | - (dash)       | python script to execute, set to '-' to run shell
+| PYTHONHOME | env          | /pyenv         | python home
 
 ## Limitations
 This package currently contains only the core environement. In order to include third-party modules,
