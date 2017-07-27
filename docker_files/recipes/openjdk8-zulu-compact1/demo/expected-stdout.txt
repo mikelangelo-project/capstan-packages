@@ -1,5 +1,10 @@
-java.so: Starting JVM app using: io/osv/nonisolated/RunNonIsolatedJvmApp
-java.so: Setting Java system classloader to NonIsolatingOsvSystemClassLoader
-java version "1.8.0_131"
-OpenJDK Runtime Environment (1.8.0_131-b11)
-OpenJDK 64-Bit Server VM (build 25.131-b11, mixed mode)
+BUREK 0
+BUREK 1
+BUREK 2
+BUREK 3
+BUREK 4
+BUREK 5
+BUREK 6
+BUREK 7
+BUREK 8
+BUREK 9

@@ -1,6 +1,8 @@
 runtime: native
-
 config_set:
-  default: 
-    bootcmd: /java.so -version
-config_set_default: default
+  burek:
+    base: "openjdk8-zulu-compact3-with-java-beans:java"
+    env:
+      CLASSPATH: /src
+      MAIN: package1.Main
+config_set_default: burek

@@ -1,6 +1,8 @@
 runtime: native
-
 config_set:
-  default: 
-    bootcmd: /java.so -version
-config_set_default: default
+  burek:
+    base: "openjdk7:java"
+    env:
+      CLASSPATH: /src
+      MAIN: package1.Main
+config_set_default: burek
