@@ -2,8 +2,8 @@ runtime: native
 
 config_set:
   default:
-    bootcmd: /python demo.py
+    base: "python-2.7:python"
     env:
-      PYTHONHOME: /pyenv
+      MAIN: /demo.py
 
 config_set_default: default
