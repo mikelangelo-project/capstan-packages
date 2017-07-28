@@ -1,0 +1,8 @@
+runtime: native
+config_set:
+  node:
+    bootcmd: /node $NODE_ARGS $MAIN $ARGS
+    env:
+      NODE_ARGS: --no-deprecation
+      MAIN: /mymain.js
+      ARGS:

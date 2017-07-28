@@ -2,5 +2,7 @@ runtime: native
 
 config_set:
   default:
-    bootcmd: /node --help
+    base: "node-4.8.2:node"
+    env:
+      MAIN: /hello-world.js
 config_set_default: default
