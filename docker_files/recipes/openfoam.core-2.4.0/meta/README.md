@@ -4,7 +4,7 @@ by the OpenFOAM solvers.
 
 ## Usage
 You only need to require this package and the libraries become available.
-In fact, the openfoam.core package is included in solvers so you shouldn't
+In fact, the openfoam.core-2.4.0 package is included in solvers so you shouldn't
 need to require this package manually.
 
 Note that configuration files reside inside /openfoam directory so solvers will need
