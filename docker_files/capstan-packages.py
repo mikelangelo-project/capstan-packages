@@ -427,6 +427,10 @@ def build_and_provide_recipe_list(recipes):
     are located in RESULTS_DIR.
     :param recipes: list of Recipe instances
     """
+    # When there is only a single recipe, copying OSv dir makes no sense.
+    if len(recipes) == 1:
+        recipes[0].do_isolate_osv_dir = False
+
     for idx, recipe in enumerate(recipes):
         TIMER.start()
         print('#%02d/%02d' % (idx + 1, len(recipes)))
