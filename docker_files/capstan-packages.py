@@ -376,6 +376,7 @@ def build_recipe(recipe):
 
     print('Set permissions to 0777')
     os.chmod(recipe.result_dir, 0777)
+    subprocess.call(['chmod', '-R', 'u+w', recipe.result_dir])
 
     if recipe.do_isolate_osv_dir:
         print('Cleanup')
