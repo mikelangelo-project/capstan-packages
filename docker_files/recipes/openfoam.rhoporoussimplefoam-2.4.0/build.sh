@@ -22,5 +22,5 @@ cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "OpenFOAM rhoPorousSimpleFoam" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version 2.4.0 \
+    --version 0.1 \
     --require openfoam.core-2.4.0

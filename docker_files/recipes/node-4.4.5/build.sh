@@ -24,6 +24,6 @@ cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "NodeJS ${NODE_VERSION}" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version ${NODE_VERSION}
+    --version 0.1
 
 echo "Done"
