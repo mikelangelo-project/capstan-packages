@@ -1,0 +1,10 @@
+runtime: native
+config_set:
+  demo:
+    bootcmd: /my-awesome-program.so $OPTIONS $MAIN $ARGS
+    env:
+      OPTIONS:
+      MAIN:
+      ARGS:
+
+config_set_default: demo

@@ -1,0 +1,1 @@
+Failed to load object: /my-awesome-program.so. Powering off.

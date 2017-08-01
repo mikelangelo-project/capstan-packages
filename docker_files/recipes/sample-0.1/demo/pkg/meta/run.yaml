@@ -1,0 +1,7 @@
+runtime: native
+
+config_set:
+  default:
+    base: "sample-0.1:demo"
+
+config_set_default: default
