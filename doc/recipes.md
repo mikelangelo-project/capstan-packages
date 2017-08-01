@@ -42,6 +42,7 @@ variables to it:
 | `PACKAGE_NAME` | osv.nfs | same as directory name of recipe |
 | `PACKAGE_RESULT_DIR` | /results/osv.nfs | directory where build result must appear |
 | `PATH` | ... | copy of PATH of main process |
+| `PLATFORM` | Ubuntu-14.04 | container base |
 | `RECIPE_DIR` | /recipes/osv.nfs | recipe directory |
 
 Following statements are true:

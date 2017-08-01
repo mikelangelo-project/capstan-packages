@@ -10,6 +10,7 @@ import sys
 import gzip
 from distutils.dir_util import copy_tree
 import multiprocessing
+import platform
 
 OSV_DIR = '/git-repos/osv'
 INTERNAL_RECIPES_DIR = '/recipes'
@@ -21,6 +22,7 @@ RESULTS_INTERMEDIATE_DIR = os.path.join(RESULTS_DIR, 'intermediate')
 SHARE_OSV_DIR = False
 LOG_DIR = os.path.join(RESULTS_DIR, 'log')
 COMMON_DIR = '/common'
+PLATFORM = 'unknown'
 
 # final osv-loader location e.g. /result/mike/osv-loader/osv-loader.qemu
 result_osv_loader_file = os.path.join(RESULTS_LOADER_DIR, 'osv-loader.qemu')
@@ -350,6 +352,7 @@ def build_recipe(recipe):
 
                 'COMMON_DIR': COMMON_DIR,
                 'CPU_COUNT': '%d' % multiprocessing.cpu_count(),
+                'PLATFORM': PLATFORM,
             },
             stdout=f,
             stderr=f,
@@ -577,7 +580,9 @@ def test_recipe_list(recipes):
 
 def override_global_variables():
     global SHARE_OSV_DIR
+    global PLATFORM
     SHARE_OSV_DIR = env_bool('SHARE_OSV_DIR')
+    PLATFORM = '-'.join(platform.linux_distribution()[:2])
 
     if SHARE_OSV_DIR:
         _print_warn('OSv source directory will be shared due to SHARE_OSV_DIR being set. Recipes may interfere.')

@@ -33,7 +33,8 @@ cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "Sample package that does nothing" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version 0.1
+    --version 0.1 \
+    --platform ${PLATFORM}
 
 cat << "EOF"
 Now that I've compiled whatever I wanted an put desired files into the PACKAGE_RESULT_DIR, my work is done.
