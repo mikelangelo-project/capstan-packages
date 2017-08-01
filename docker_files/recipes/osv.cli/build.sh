@@ -27,4 +27,5 @@ capstan package init --name "${PACKAGE_NAME}" \
     --title "OSv Command Line Interface" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
     --version 0.1 \
-    --require osv.httpserver
+    --require osv.httpserver \
+    --platform ${PLATFORM}

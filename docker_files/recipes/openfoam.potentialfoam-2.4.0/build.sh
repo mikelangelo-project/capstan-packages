@@ -23,4 +23,5 @@ capstan package init --name "${PACKAGE_NAME}" \
     --title "OpenFOAM potentialFoam" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
     --version 0.1 \
-    --require openfoam.core-2.4.0
+    --require openfoam.core-2.4.0 \
+    --platform ${PLATFORM}

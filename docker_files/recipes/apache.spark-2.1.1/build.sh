@@ -45,4 +45,5 @@ capstan package init --name "${PACKAGE_NAME}" \
     --title "Apache Spark" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
     --version 0.1 \
-    --require openjdk8-zulu-compact3-with-java-beans
+    --require openjdk8-zulu-compact3-with-java-beans \
+    --platform ${PLATFORM}
