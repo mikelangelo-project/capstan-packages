@@ -285,7 +285,7 @@ def select_recipes(filter_names):
         return []
 
     filter = None
-    if filter_names:
+    if filter_names and filter_names != "all":
         print('Filtering recipes based on environment variable')
         filter = set([name for name in filter_names.split(',')])
 
@@ -295,7 +295,7 @@ def select_recipes(filter_names):
         recipes_in_dir = available_recipes(root)
         for recipe in recipes_in_dir:
             if recipe.name in recipe_names:
-                _print_err('Duplicate result found: %s (root = %s)' % (recipe.name, root))
+                _print_err('Duplicate recipe found: %s (root = %s)' % (recipe.name, root))
                 sys.exit()
             if filter and recipe.name not in filter:
                 continue
@@ -571,7 +571,7 @@ def test_recipe_list(recipes):
             _print_warn('Recipe %s contains no demo package' % recipe.name)
 
     if failed_recipes:
-        _print_err('Testing recipes failed for following recipes:\n%s' % '\n'.join(['- ' + r.name for r in recipes]))
+        _print_err('Testing recipes failed for following recipes:\n%s' % '\n'.join(['- ' + r.name for r in failed_recipes]))
     else:
         _print_ok('All tests passed without errors.')
 
