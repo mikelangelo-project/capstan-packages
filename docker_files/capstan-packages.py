@@ -11,6 +11,7 @@ import gzip
 from distutils.dir_util import copy_tree
 import multiprocessing
 import platform
+from datetime import datetime
 
 OSV_DIR = '/git-repos/osv'
 INTERNAL_RECIPES_DIR = '/recipes'
@@ -244,13 +245,18 @@ def provide_loader_image():
         f2.writelines(f1)
 
     print('Create index.yaml')
-    s = '''
-        format_version: "1"
-        version: "v0.24-116-g73b38d8"
-        created: "2016-06-11T15:41:07"
-        description: "OSv Bootloader"
-        build: "scripts/build"
-    '''
+    s = '''        
+        description: OSv Bootloader
+        format_version: 1
+        version: %(version)s
+        created: %(created)s
+        platform: %(platform)s
+    '''.replace('        ', '').strip() + '\n'
+    s = s % {
+        'version': osv_commit(),
+        'created': timestamp(),
+        'platform': PLATFORM,
+    }
 
     with open(result_osv_loader_index_file, 'w') as f:
         f.write(s)
@@ -604,6 +610,14 @@ def confirm_or_exit():
             return
         elif s in ['n', 'N', 'no', 'NO']:
             sys.exit()
+
+
+def timestamp():
+    return datetime.utcnow().strftime('%Y-%m-%d %H:%M')
+
+
+def osv_commit():
+    return subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).strip()
 
 
 if __name__ == '__main__':
