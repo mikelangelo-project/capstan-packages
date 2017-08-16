@@ -55,6 +55,13 @@ RUN make -C modules/httpserver -j 6
 RUN make -C mike-apps/OpenFOAM -j 6
 
 #
+# TEMPORARY (refactor me)
+#
+
+RUN apt-get update -y
+RUN apt-get install -y realpath
+
+#
 # OBTAIN RECIPES AND RUN
 #
 

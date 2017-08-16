@@ -128,7 +128,7 @@ def prepare_osv_scripts():
     """
     _print_ok('Preparing OSv scripts')
 
-    with open('/common/skip_vm_uploads.patch', 'r') as f:
+    with open('/common/the_patch.patch', 'r') as f:
         c = 'patch -p1'
         p = subprocess.Popen(
             c.split(),
@@ -140,25 +140,15 @@ def prepare_osv_scripts():
         output, error = p.communicate()
 
         if p.returncode != 0:
-            _print_err('Applying patch /common/skip_vm_uploads.patch returned non-zero status code')
+            _print_err('Applying patch /common/the_patch.patch returned non-zero status code')
             print('--- STDOUT: ---\n%s' % output)
             print('--- STDERR: ---\n%s' % error)
 
-    with open('/common/upload_manifest.py.patch', 'r') as f:
-        c = 'patch -p1'
-        p = subprocess.Popen(
-            c.split(),
-            cwd=OSV_DIR,
-            stdin=f,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        output, error = p.communicate()
-
-        if p.returncode != 0:
-            _print_err('Applying patch /common/upload_manifest.py.patch returned non-zero status code')
-            print('--- STDOUT: ---\n%s' % output)
-            print('--- STDERR: ---\n%s' % error)
+    p = subprocess.Popen(
+        "chmod a+x /git-repos/osv/scripts/export_manifest.py /git-repos/osv/scripts/manifest_common.py".split(),
+        cwd=OSV_DIR,
+    )
+    p.wait()
 
     with open('/common/add_mike_apps_to_config.patch', 'r') as f:
         c = 'patch -p1'
@@ -331,6 +321,11 @@ def build_recipe(recipe):
         osv_dir_clone = os.path.join(tempfile.mkdtemp(), 'osv')
         shutil.copytree(recipe.osv_dir, osv_dir_clone, symlinks=True)
         recipe.osv_dir = osv_dir_clone
+
+    print('Preparing export directory')
+    export_dir = os.path.join(recipe.osv_dir, 'build', 'export')
+    shutil.rmtree(export_dir, ignore_errors=True)
+    os.makedirs(export_dir)
 
     print('Preparing result directory for recipe')
     shutil.rmtree(recipe.result_dir, ignore_errors=True)

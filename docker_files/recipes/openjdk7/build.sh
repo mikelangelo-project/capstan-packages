@@ -5,20 +5,11 @@ set -o nounset
 set -o pipefail
 set -o errtrace
 
-# Clear usr.manifest.skel that is already contained in bootstrap package
-echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
-
-###############################################################################
-# Build the OpenJDK 7 package.
-###############################################################################
-
 echo "Exporting OpenJDK 7"
 
 cd ${OSV_DIR}
-${OSV_DIR}/scripts/build image=java -j ${CPU_COUNT}
-
-cd ${OSV_BUILD_DIR}
-${OSV_DIR}/scripts/upload_manifest.py -m usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}
+${OSV_DIR}/scripts/build image=java export=all usrskel=none -j ${CPU_COUNT}
+cp -R ${OSV_DIR}/build/export/. ${PACKAGE_RESULT_DIR}
 
 cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
