@@ -55,6 +55,14 @@ RUN make -C modules/httpserver -j 6
 RUN make -C mike-apps/OpenFOAM -j 6
 
 #
+# TEMPORARY
+#
+
+RUN cd /go/src/github.com/mikelangelo-project/capstan && \
+    git checkout develop && \
+    go install
+
+#
 # OBTAIN RECIPES AND RUN
 #
 
