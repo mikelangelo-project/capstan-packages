@@ -24,6 +24,7 @@ SHARE_OSV_DIR = False
 LOG_DIR = os.path.join(RESULTS_DIR, 'log')
 COMMON_DIR = '/common'
 PLATFORM = 'unknown'
+SILENT = False
 
 # final osv-loader location e.g. /result/mike/osv-loader/osv-loader.qemu
 result_osv_loader_file = os.path.join(RESULTS_LOADER_DIR, 'osv-loader.qemu')
@@ -587,7 +588,9 @@ def test_recipe_list(recipes):
 def override_global_variables():
     global SHARE_OSV_DIR
     global PLATFORM
+    global SILENT
     SHARE_OSV_DIR = env_bool('SHARE_OSV_DIR')
+    SILENT = env_bool('SILENT')
     PLATFORM = '-'.join(platform.linux_distribution()[:2])
 
     if SHARE_OSV_DIR:
@@ -604,6 +607,9 @@ def env_bool(name, default='no'):
 
 
 def confirm_or_exit():
+    if SILENT:
+        return
+
     while True:
         s = raw_input('Continue? [y/n]')
         if s in ['y', 'Y', 'yes', 'YES']:

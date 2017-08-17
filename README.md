@@ -80,6 +80,7 @@ You can, however, customize container behavior by setting following environment 
 | `SHARE_OSV_DIR` | yes | should each recipe get its own copy of osv src dir (yes by default) |
 | `TEST_RECIPES` | osv.nfs | test only recipes listed (comma-separated), `[]` means empty list (don't use brackets for non-empty list). By default it is a copy of `RECIPES`. To test all recipes use `TEST_RECIPES=all`. |
 | `KEEP_RECIPES` | yes | keep packages that are already in /result dir when mounted (yes by default) |
+| `SILENT` | yes | avoid prompting for confirmation (no by default) |
 
 To build only `osv.nfs` package, for example, you can use following command:
 ```bash
