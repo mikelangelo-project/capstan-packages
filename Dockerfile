@@ -38,7 +38,7 @@ WORKDIR /git-repos
 RUN git clone https://github.com/cloudius-systems/osv.git
 WORKDIR /git-repos/osv
 RUN git submodule update --init --recursive
-RUN make -j6
+RUN scripts/build -j6 nfs=true
 # - clone mike-apps
 WORKDIR /git-repos/osv
 RUN git clone https://github.com/mikelangelo-project/mike-apps.git
