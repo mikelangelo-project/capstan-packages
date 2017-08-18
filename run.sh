@@ -20,7 +20,7 @@ mkdir -p result
 # when the container is done working.
 #
 echo "Run all recipes and then exit"
-docker run -it --privileged --volume="$PWD/result:/result" --env SILENT=yes mikelangelo/capstan-packages python /capstan-packages.py
+docker run -i --privileged --volume="$PWD/result:/result" --env SILENT=yes mikelangelo/capstan-packages python /capstan-packages.py
 
 echo "Done"
 
