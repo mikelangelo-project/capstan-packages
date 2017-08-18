@@ -18,10 +18,14 @@ ${OSV_DIR}/scripts/build image=OpenFOAM -j ${CPU_COUNT}
 cd ${OSV_BUILD_DIR}
 ${OSV_DIR}/scripts/upload_manifest.py -m usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}
 
+# Add decompose and reconstruct that are in the same directory as (ignored) solvers
+cp ${OSV_DIR}/mike-apps/OpenFOAM/ROOTFS/usr/bin/decomposePar.so ${PACKAGE_RESULT_DIR}/usr/bin
+cp ${OSV_DIR}/mike-apps/OpenFOAM/ROOTFS/usr/bin/reconstructPar.so ${PACKAGE_RESULT_DIR}/usr/bin
+
 cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "OpenFOAM Core" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version 0.1 \
+    --version 0.2 \
     --require ompi-1.10 \
     --platform ${PLATFORM}
