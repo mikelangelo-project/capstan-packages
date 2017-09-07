@@ -5,9 +5,6 @@ set -o nounset
 set -o pipefail
 set -o errtrace
 
-# Clear usr.manifest.skel that is already contained in bootstrap package
-echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
-
 NODE_VERSION=4.8.2
 echo "Exporting Node ${NODE_VERSION}"
 
