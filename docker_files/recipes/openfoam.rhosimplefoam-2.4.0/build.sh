@@ -5,18 +5,13 @@ set -o nounset
 set -o pipefail
 set -o errtrace
 
-# Clear usr.manifest.skel that is already contained in bootstrap package
-echo "[manifest]" > ${OSV_DIR}/usr.manifest.skel
+cd ${OSV_BUILD_DIR}
+echo "/usr/bin/rhoSimpleFoam.so: ${OSV_DIR}/mike-apps/OpenFOAM/ROOTFS/usr/bin/rhoSimpleFoam.so" > usr.manifest
 
 # Patch the module file to exclude the dependency on HTTP server
 cd ${OSV_DIR}
 patch -p1 < ${COMMON_DIR}/openfoam_remove_ompi.patch
-
-${OSV_DIR}/scripts/build image=OpenFOAM -j ${CPU_COUNT}
-
-cd ${OSV_BUILD_DIR}
-echo "/usr/bin/rhoSimpleFoam.so: ${OSV_DIR}/mike-apps/OpenFOAM/ROOTFS/usr/bin/rhoSimpleFoam.so" > usr.manifest
-${OSV_DIR}/scripts/upload_manifest.py -m usr.manifest -e ${PACKAGE_RESULT_DIR} -D gccbase=${GCCBASE} -D miscbase=${MISCBASE}
+${OSV_DIR}/scripts/build image=OpenFOAM export=all usrskel=none export_dir=$PACKAGE_RESULT_DIR -j ${CPU_COUNT}
 
 cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
