@@ -1,0 +1,28 @@
+From 9681659520ae1df5becf2e69f4be8b3aa31dca12 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miha=20Ple=C5=A1ko?= <miha.plesko@xlab.si>
+Date: Thu, 7 Sep 2017 09:33:16 +0200
+Subject: [PATCH] Allow manifest enries to avoid spaces around ':'
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Miha Pleško <miha.plesko@xlab.si>
+---
+ scripts/manifest_common.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/manifest_common.py b/scripts/manifest_common.py
+index 414cce3..c0aa468 100644
+--- a/scripts/manifest_common.py
++++ b/scripts/manifest_common.py
+@@ -54,7 +54,7 @@ def read_manifest(fn):
+         for line in f:
+             line = line.rstrip();
+             if comment.match(line): continue
+-            components = line.split(": ", 2)
++            components = line.split(":", 2)
+             guestpath = components[0].strip();
+             hostpath = components[1].strip()
+             ret.append((guestpath, hostpath))
+--
+2.7.4

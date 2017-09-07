@@ -145,6 +145,22 @@ def prepare_osv_scripts():
             print('--- STDOUT: ---\n%s' % output)
             print('--- STDERR: ---\n%s' % error)
 
+    with open('/common/iron_upload_manifest.patch', 'r') as f:
+        c = 'patch -p1'
+        p = subprocess.Popen(
+            c.split(),
+            cwd=OSV_DIR,
+            stdin=f,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        output, error = p.communicate()
+
+        if p.returncode != 0:
+            _print_err('Applying patch /common/iron_upload_manifest.patch returned non-zero status code')
+            print('--- STDOUT: ---\n%s' % output)
+            print('--- STDERR: ---\n%s' % error)
+
 
 def prepare_result_directories():
     # /result/log
