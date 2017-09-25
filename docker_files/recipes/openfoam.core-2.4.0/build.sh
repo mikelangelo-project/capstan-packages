@@ -20,6 +20,6 @@ cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "OpenFOAM Core" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version 0.2 \
+    --version 0.3 \
     --require ompi-1.10 \
     --platform ${PLATFORM}

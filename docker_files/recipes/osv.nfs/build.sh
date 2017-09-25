@@ -21,7 +21,7 @@ cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "OSv NFS Client Tools" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version 0.1 \
+    --version 0.2 \
     --platform ${PLATFORM}
 
 echo "Done"
