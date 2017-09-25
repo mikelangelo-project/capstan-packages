@@ -15,5 +15,5 @@ capstan package init --name "${PACKAGE_NAME}" \
     --title "Open MPI" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
     --version 0.2 \
-    --require osv.httpserver \
+    --require osv.httpserver-api \
     --platform ${PLATFORM}

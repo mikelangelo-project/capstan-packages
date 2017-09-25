@@ -1,6 +1,6 @@
 Allowed options:
   --help                produce help message
-  --access-allow arg    Set the Access-Control-Allow-Origin to \*\. Note the 
+  --access-allow arg    Set the Access-Control-Allow-Origin to \*\. Note the
                         security risk
   --ipaddress arg       set the ip address
   --port arg            set the port
