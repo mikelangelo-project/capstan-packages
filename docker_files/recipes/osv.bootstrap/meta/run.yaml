@@ -1,0 +1,7 @@
+runtime: native
+
+config_set:
+  sleep:
+    bootcmd: /bin/sleep.so $SLEEP_SECONDS
+    env:
+      SLEEP_SECONDS: -1
