@@ -1,17 +1,37 @@
 runtime: native
 config_set:
   master:
-    bootcmd: /java.so -Duser.dir=/spark -Xms$XMS -Xmx$XMX -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.master.Master --host $HOST --port $PORT --webui-port $UIPORT
+    bootcmd: >
+      /bin/cd.so /spark &
+      /java.so
+      -Xms$XMS
+      -Xmx$XMX
+      -cp /spark/conf:/spark/jars/*
+      -Dscala.usejavacp=true
+      org.apache.spark.deploy.master.Master
+      --host $HOST
+      --port $PORT
+      --webui-port $UIPORT
     env:
       XMS: 512m
       XMX: 512m
       HOST: 0.0.0.0
       PORT: 7077
       UIPORT: 8080
+      PWD: /spark
   worker:
-    bootcmd: /java.so -Duser.dir=/spark -Xms$XMS -Xmx$XMX -cp /spark/conf:/spark/jars/* -Dscala.usejavacp=true org.apache.spark.deploy.worker.Worker $MASTER
+    bootcmd: >
+      /bin/cd.so /spark &
+      /java.so
+      -Xms$XMS
+      -Xmx$XMX
+      -cp /spark/conf:/spark/jars/*
+      -Dscala.usejavacp=true
+      org.apache.spark.deploy.worker.Worker
+      $MASTER
     env:
       XMS: 512m
       XMX: 512m
       MASTER: localhost:7077
+      PWD: /spark
 config_set_default: worker
