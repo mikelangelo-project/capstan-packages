@@ -1,3 +1,8 @@
+Copyright (C) 2017 XLAB, Ltd.
+
+This work is open source software, licensed under the terms of the
+BSD license as described in the LICENSE file in the top-level directory.
+
 diff --git a/modules/cli/module.py b/modules/cli/module.py
 index e38aa2d..8c94087 100644
 --- a/modules/cli/module.py
