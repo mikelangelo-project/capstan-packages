@@ -1,3 +1,8 @@
+Copyright (C) 2017 XLAB, Ltd.
+
+This work is open source software, licensed under the terms of the
+BSD license as described in the LICENSE file in the top-level directory.
+
 diff --git a/usr.manifest.skel b/usr.manifest.skel
 index 583bdfe..ba971d4 100644
 --- a/usr.manifest.skel
