@@ -1,8 +1,3 @@
-Copyright (C) 2017 XLAB, Ltd.
-
-This work is open source software, licensed under the terms of the
-BSD license as described in the LICENSE file in the top-level directory.
-
 diff --git a/modules/cloud-init/cmdline b/modules/cloud-init/cmdline
 index 00c819e..3cebf6b 100644
 --- a/modules/cloud-init/cmdline
