@@ -133,7 +133,6 @@ mikelangelo/capstan-packages   latest   bee017f1e55c   16 hours ago   2.82 GB
 Capstan-packages platform is distributed under the 3-clause BSD license.
 
 ## Acknowledgements
-This project  has been conducted within the RIA [MIKELANGELO
-project](https://www.mikelangelo-project.eu) (no.  645402), started in January
-2015, and co-funded by the European Commission under the H2020-ICT- 07-2014:
-Advanced Cloud Infrastructures and Services programme.
+This code has been developed within the [MIKELANGELO project](https://www.mikelangelo-project.eu)
+(no. 645402), started in January 2015, and co-funded by the European Commission under the
+H2020-ICT-07-2014: Advanced Cloud Infrastructures and Services programme.
