@@ -1,0 +1,13 @@
+#
+# Copyright (C) 2017 XLAB, Ltd.
+#
+# This work is open source software, licensed under the terms of the
+# BSD license as described in the LICENSE file in the top-level directory.
+#
+
+runtime: native
+config_set:
+  init:
+    bootcmd: /tools/cpiod.so --prefix /
+  app:
+    bootcmd: /bin/echo.so \nFinished uploading files. Please reboot unikernel to run application.
