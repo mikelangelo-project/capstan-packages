@@ -12,3 +12,7 @@ config_set:
     bootcmd: /bin/sleep.so $SLEEP_SECONDS
     env:
       SLEEP_SECONDS: -1
+  hello_world:
+    bootcmd: /bin/echo.so Hello World
+  report_ready:
+    bootcmd: /bin/echo.so \n--- OSV REPORTING READY ---
