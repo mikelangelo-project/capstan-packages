@@ -16,3 +16,21 @@ config_set:
     bootcmd: /bin/echo.so Hello World
   report_ready:
     bootcmd: /bin/echo.so \n--- OSV REPORTING READY ---
+  # ZFS-format attached volume
+  format_volume:
+    bootcmd: /zpool.so create -m $VOLUME_MOUNT volume$VOLUME_IDX /dev/vblk$VOLUME_IDX
+    env:
+      VOLUME_IDX: 1
+      VOLUME_MOUNT: /volume
+  format_volume1:
+    bootcmd: /zpool.so create -m $VOLUME1_MOUNT volume /dev/vblk1
+    env:
+      VOLUME1_MOUNT: /volume
+  format_volume2:
+    bootcmd: /zpool.so create -m $VOLUME2_MOUNT volume /dev/vblk2
+    env:
+      VOLUME2_MOUNT: /volume
+  format_volume3:
+    bootcmd: /zpool.so create -m $VOLUME3_MOUNT volume /dev/vblk3
+    env:
+      VOLUME3_MOUNT: /volume

@@ -25,3 +25,23 @@ c) Boot unikernel that only prints "--- OSV REPORTING READY ---" and then exits:
 ```
 $ capstan run demo --boot report_ready
 ```
+
+d) Mount volume
+```
+$ capstan run demo --boot format_volume --env VOLUME_IDX=1 --env VOLUME_MOUNT=/volume
+```
+This will ZFS-format whatever is attached to /dev/vblk1 and mount it to /volume.
+
+| ENV           |  MAPS TO     | DEFAULT VALUE      | EFFECT
+|---------------|--------------|--------------------|--------
+| VOLUME_IDX    | -            | 1                  | what index of /dev/vblk{index} to format
+| VOLUME_MOUNT  | -            | /volume            | where to mount volume to
+
+There are some shortcut configurations available:
+
+```
+$ capstan run demo --boot format_volume1 --env VOLUME1_MOUNT=/volume
+$ capstan run demo --boot format_volume2 --env VOLUME2_MOUNT=/volume
+$ capstan run demo --boot format_volume3 --env VOLUME3_MOUNT=/volume
+```
+They will format and mount volume with corresponding index to VOLUME1_MOUNT, which is /volume by default.
