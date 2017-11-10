@@ -1,4 +1,2 @@
 Allowed options:
   --help                produce help message
-  --port arg (=\d+)   set listening port
-  --prefix arg (=/)     set prefix
