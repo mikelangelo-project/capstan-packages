@@ -5,6 +5,8 @@ This package brings cloud-init functionality to OSv.
 You only need to require this package and cloud-init is enabled. To actually make use of the
 cloud-inti you need to performs following steps:
 
+## NoCloud
+
 ### 1. Specify user-data yaml file
 The user-data file supports many options, but let's focus on `run:` that allows you to execute
 any number of commands supported by osv.httpserver-api package (visit http://osv.io/api/swagger-ui/dist/index.html
@@ -51,9 +53,23 @@ There are two important arguments used here:
 * `--volume ./cloud-init.iso` attaches the cloud-init disk to the OSv unikernel. Make sure that in case you're attaching
     other volumes as well besides the cloud-init disk, the cloud-init must be listed **first**.
 
+## Cloud Providers
+
+### OpenStack
+OpenStack cloud-init is supported (the one where file gets served on 169.254.169.254). Example configuration script:
+
+```
+#cloud-config
+run:
+- PUT: /app/
+  command: "runscript /run/hello_world"
+```
+
 ## Limitations
 Following cloud-init implementations are supported:
-* OpenStack/AWS/GCE cloud-init
+
+*  OpenStack/AWS/GCE cloud-init
 * ISO9660 cloud-init
+
 Read this documentation about supported fields:
 https://github.com/cloudius-systems/osv/wiki/Cloud-init
