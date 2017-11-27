@@ -12,8 +12,7 @@ The user-data file supports many options, but let's focus on `run:` that allows 
 any number of commands supported by osv.httpserver-api package (visit http://osv.io/api/swagger-ui/dist/index.html
 to see a list of all supported commands). Below please find an example where we first set
 two environment variables (PORT and UIPORT) and then run our application specify arbitrary
-bootcmd that will be run in a new thread on the OSv unikernel. The commands are always executed
-sequentially i.e. command does not start until previos one exits:
+bootcmd that will be run in a new thread on the OSv unikernel.
 
 ```yaml
 # meta/user-data.yaml
@@ -26,6 +25,18 @@ run:
   - PUT: /app/
      command: "runscript /run/hello-world"
 ```
+
+Another option is `files:` that lets you create one or more files with given content:
+
+```yaml
+# meta/user-data.yaml
+
+files:
+  /configuration.conf: |
+     This is the content of
+     my configuration file.
+```
+
 ### 2. Bake the user-data file on ISO9660 disk
 At the moment we need to manually bake user-data onto a ISO9660 disk by using external tool called
 cloud-localds:
