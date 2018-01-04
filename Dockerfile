@@ -17,7 +17,8 @@ RUN apt-get install -y curl git build-essential libboost-all-dev qemu qemu-utils
     unzip p11-kit maven autoconf git zip libxml2-utils xsltproc libwxbase3.0-dev libncurses5-dev libglu1-mesa-dev \
     freeglut3-dev mesa-common-dev wx3.0-headers libnuma-dev libibverbs-dev libtool flex bison cmake zlib1g-dev \
     libopenmpi-dev openmpi-bin qt4-dev-tools libqt4-dev libqt4-opengl-dev freeglut3-dev libqtwebkit-dev gnuplot \
-    libreadline-dev libncurses-dev libxt-dev libscotch-dev libcgal-dev software-properties-common ed realpath
+    libreadline-dev libncurses-dev libxt-dev libscotch-dev libcgal-dev software-properties-common ed realpath nano
+ENV TERM=xterm
 # - GO
 RUN curl https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz | tar xz -C /usr/local && \
     mv /usr/local/go /usr/local/go1.7 && \
