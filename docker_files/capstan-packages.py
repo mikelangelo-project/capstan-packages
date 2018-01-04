@@ -395,7 +395,7 @@ def provide_mpm_for_recipe(recipe):
     :param recipe: Recipe instance
     :return: True on success, False otherwise
     """
-    _print_ok('Providing mpm for package "%s" into result directory %s' % (recipe.name, RESULTS_DIR))
+    print('Providing mpm for package "%s" into result directory %s' % (recipe.name, RESULTS_DIR))
 
     print('capstan package build')
     p = subprocess.Popen(
