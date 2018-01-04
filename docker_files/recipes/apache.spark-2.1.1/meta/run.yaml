@@ -9,11 +9,10 @@ runtime: native
 config_set:
   master:
     bootcmd: >
-      /bin/cd.so /spark &
       /java.so
       -Xms$XMS
       -Xmx$XMX
-      -cp /spark/conf:/spark/jars/*
+      -cp /conf:/spark/jars/*
       -Dscala.usejavacp=true
       org.apache.spark.deploy.master.Master
       --host $HOST
@@ -25,14 +24,12 @@ config_set:
       HOST: 0.0.0.0
       PORT: 7077
       UIPORT: 8080
-      PWD: /spark
   worker:
     bootcmd: >
-      /bin/cd.so /spark &
       /java.so
       -Xms$XMS
       -Xmx$XMX
-      -cp /spark/conf:/spark/jars/*
+      -cp /conf:/spark/jars/*
       -Dscala.usejavacp=true
       org.apache.spark.deploy.worker.Worker
       $MASTER
@@ -40,5 +37,4 @@ config_set:
       XMS: 512m
       XMX: 512m
       MASTER: localhost:7077
-      PWD: /spark
 config_set_default: worker

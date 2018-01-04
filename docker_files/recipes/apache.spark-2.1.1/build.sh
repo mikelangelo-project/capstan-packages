@@ -31,10 +31,9 @@ cd ${RECIPE_DIR}/spark
 
 echo "Grab results needed"
 
-mkdir ${PACKAGE_RESULT_DIR}/spark
-mkdir -p ${PACKAGE_RESULT_DIR}/spark/launcher/target/scala-2.11
+mkdir -p ${PACKAGE_RESULT_DIR}/launcher/target/scala-2.11
 mkdir -p ${PACKAGE_RESULT_DIR}/usr/lib
-tar xvf ${RECIPE_DIR}/spark/spark-2.1.1-bin-2.7.3.tgz -C ${PACKAGE_RESULT_DIR}/spark --strip-components=1
+tar xvf ${RECIPE_DIR}/spark/spark-2.1.1-bin-2.7.3.tgz -C ${PACKAGE_RESULT_DIR} --strip-components=1
 cp ${osvPbDir}/libOsvProcessBuilder.so ${PACKAGE_RESULT_DIR}/usr/lib/libOsvProcessBuilder.so
 
 echo "Create configuration files for Capstan"
@@ -43,6 +42,6 @@ cd ${PACKAGE_RESULT_DIR}
 capstan package init --name "${PACKAGE_NAME}" \
     --title "Apache Spark" \
     --author "MIKELANGELO Project (info@mikelangelo-project.eu)" \
-    --version 0.3 \
+    --version 0.4 \
     --require openjdk8-zulu-compact3-with-java-beans \
     --platform ${PLATFORM}
