@@ -55,6 +55,7 @@ class Timer:
 
 
 TIMER = Timer()
+TIMER2 = Timer()
 
 
 class Colors:
@@ -319,9 +320,11 @@ def build_recipe(recipe):
 
     if recipe.do_isolate_osv_dir:
         print('Preparing isolated osv directory')
+        TIMER2.start()
         osv_dir_clone = os.path.join(tempfile.mkdtemp(), 'osv')
         shutil.copytree(recipe.osv_dir, osv_dir_clone, symlinks=True)
         recipe.osv_dir = osv_dir_clone
+        TIMER2.report("preparing isolated osv directory")
 
     print('Preparing result directory for recipe')
     shutil.rmtree(recipe.result_dir, ignore_errors=True)
